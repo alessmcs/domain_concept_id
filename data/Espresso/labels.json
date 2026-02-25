@@ -1,0 +1,76 @@
+{
+    "classes" : {
+    "Company" : {
+        "Attributes": [
+            "id", 
+            "name", 
+            "tel", 
+            "website",
+            "alphabet",
+            "avatar"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "Package" : {
+        "Attributes": [
+            "number", 
+            "condition",
+            "company",
+            "status",
+            "state",
+            "name"
+        ], 
+        "Methods" : [
+
+        ]
+    }, 
+    "PackageStatus" : {
+        "Attributes": [
+            "time",
+            "context",
+            "location"
+        ], 
+        "Methods" : [
+
+        ]
+    }, 
+    "ReminderService" : {
+        "Attributes": [
+
+        ], 
+        "Methods" : [
+            "pushNotifications"
+        ]
+    }, 
+    "PackagesRepository" : {
+        "Attributes": [
+            "packagesRemoteDataSource",
+            "packagesLocalDataSource",
+            "cachedPackages"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "CompaniesRepository" : {
+        "Attributes": [
+
+        ], 
+        "Methods" : [
+
+        ]
+    }, 
+    "App" : {
+        "Attributes": [
+
+        ], 
+        "Methods" : [
+
+        ]
+    }
+
+}, 
+"associations" : []
+}

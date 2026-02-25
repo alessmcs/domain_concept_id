@@ -1,0 +1,758 @@
+{
+    "classes": {
+        "SettingsFragment": {
+            "Attributes": [
+                "prefStartTime",
+                "prefsEndTime",
+                "prefAlert",
+                "prefNotificationInterval",
+                "prefNavigationBar",
+                "sp",
+                "startHour",
+                "startMinute",
+                "endHour",
+                "endMinute"
+            ],
+            "Methods": [
+                "onCreatePreferences",
+                "initPrefs"
+            ]
+        },
+        "AboutFragment": {
+            "Attributes": [
+                "prefRate",
+                "prefLicenses",
+                "prefThx1",
+                "prefThx2",
+                "prefSourceCode",
+                "prefSendAdvices",
+                "prefDonate",
+                "prefVersion"
+            ],
+            "Methods": [
+                "onCreatePreferences",
+                "initPrefs"
+            ]
+        },
+        "OnboardingActivity": {
+            "Attributes": [
+                "viewPager",
+                "buttonFinish",
+                "buttonPre",
+                "buttonNext",
+                "indicators",
+                "bgColors",
+                "currentPosition",
+                "MSG_DATA_INSERT_FINISH",
+                "handler"
+            ],
+            "Methods": [
+                "onCreate",
+                "initViews",
+                "initData",
+                "updateIndicators",
+                "enableShortcuts",
+                "navigateToMainActivity"
+            ]
+        },
+        "OnboardingFragment": {
+            "Attributes": [
+                "sectionLabel",
+                "sectionIntro",
+                "sectionImg",
+                "page",
+                "ARG_SECTION_NUMBER"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "initViews"
+            ]
+        },
+        "CompanyDetailFragment": {
+            "Attributes": [
+                "fab",
+                "textViewCompanyName",
+                "textViewTel",
+                "textViewWebsite",
+                "presenter",
+                "tel",
+                "website"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "onResume",
+                "onPause",
+                "onOptionsItemSelected",
+                "initViews",
+                "setCompanyName",
+                "setCompanyTel",
+                "setCompanyWebsite",
+                "showErrorMsg",
+                "share"
+            ]
+        },
+        "CompanyDetailContract": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "CompanyDetailActivity": {
+            "Attributes": [
+                "fragment",
+                "COMPANY_ID"
+            ],
+            "Methods": [
+                "onCreate",
+                "onSaveInstanceState"
+            ]
+        },
+        "SearchFragment": {
+            "Attributes": [
+                "searchView",
+                "recyclerView",
+                "adapter",
+                "presenter"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "onResume",
+                "onPause",
+                "onOptionsItemSelected",
+                "initViews",
+                "showResult",
+                "hideImm"
+            ]
+        },
+        "SearchActivity": {
+            "Attributes": [
+                "fragment"
+            ],
+            "Methods": [
+                "onCreate",
+                "onSaveInstanceState"
+            ]
+        },
+        "PackageFilterType": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "PackagesContract": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "PackagesFragment": {
+            "Attributes": [
+                "bottomNavigationView",
+                "fab",
+                "recyclerView",
+                "emptyView",
+                "refreshLayout",
+                "adapter",
+                "presenter",
+                "selectedPackageNumber"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "onResume",
+                "onPause",
+                "onCreateOptionsMenu",
+                "onOptionsItemSelected",
+                "onContextItemSelected",
+                "initViews",
+                "setLoadingIndicator",
+                "showEmptyView",
+                "showPackages",
+                "shareTo",
+                "showPackageRemovedMsg",
+                "copyPackageNumber",
+                "showNetworkError",
+                "setSelectedPackage"
+            ]
+        },
+        "PackageDetailsFragment": {
+            "Attributes": [
+                "recyclerView",
+                "fab",
+                "swipeRefreshLayout",
+                "toolbarLayout",
+                "adapter",
+                "presenter"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "onResume",
+                "onPause",
+                "onDestroy",
+                "onCreateOptionsMenu",
+                "onOptionsItemSelected",
+                "initViews",
+                "setLoadingIndicator",
+                "showNetworkError",
+                "showPackageDetails",
+                "setToolbarBackground",
+                "shareTo",
+                "copyPackageNumber",
+                "showDeleteAlertDialog",
+                "showEditNameDialog",
+                "showInputIsEmpty"
+            ]
+        },
+        "PackageDetailsContract": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "CompaniesFragment": {
+            "Attributes": [
+                "recyclerView",
+                "presenter",
+                "adapter"
+            ],
+            "Methods": [
+                "newInstance",
+                "onCreate",
+                "onCreateView",
+                "onResume",
+                "onPause",
+                "onCreateOptionsMenu",
+                "onOptionsItemSelected",
+                "initViews",
+                "showGetCompaniesError",
+                "showCompanies"
+            ]
+        },
+        "CompaniesAdapter": {
+            "Attributes": [
+                "context",
+                "inflater",
+                "list",
+                "listener",
+                "TYPE_NORMAL",
+                "TYPE_WITH_HEADER"
+            ],
+            "Methods": []
+        },
+        "CompaniesContract": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "FastScrollRecyclerView": {
+            "Attributes": [
+                "mScrollbar",
+                "mScrollPosState",
+                "mDownX",
+                "mDownY",
+                "mLastY",
+                "mStateChangeListener"
+            ],
+            "Methods": [
+                "getScrollBarWidth",
+                "getScrollBarThumbHeight",
+                "onFinishInflate",
+                "onInterceptTouchEvent",
+                "onTouchEvent",
+                "handleTouchEvent",
+                "onRequestDisallowInterceptTouchEvent",
+                "getAvailableScrollHeight",
+                "getAvailableScrollBarHeight",
+                "draw",
+                "synchronizeScrollBarThumbOffsetToViewScroll",
+                "scrollToPositionAtProgress",
+                "onUpdateScrollbar",
+                "getCurScrollState",
+                "setThumbColor",
+                "setTrackColor",
+                "setPopupBgColor",
+                "setPopupTextColor",
+                "setPopupTextSize",
+                "setPopUpTypeface",
+                "setAutoHideDelay",
+                "setAutoHideEnabled",
+                "setStateChangeListener"
+            ]
+        },
+        "Timeline": {
+            "Attributes": [
+                "lineSize",
+                "startLine",
+                "finishLine",
+                "atomDrawable"
+            ],
+            "Methods": [
+                "init",
+                "onDraw",
+                "onMeasure",
+                "onSizeChanged",
+                "initDrawableSize"
+            ]
+        },
+        "FastScroller": {
+            "Attributes": [
+                "DEFAULT_AUTO_HIDE_DELAY",
+                "mRecyclerView",
+                "mPopup",
+                "mThumbHeight",
+                "mWidth",
+                "mThumb",
+                "mTrack",
+                "mTmpRect",
+                "mInvalidateRect",
+                "mInvalidateTmpRect",
+                "mTouchInset",
+                "mTouchOffset",
+                "mThumbPosition",
+                "mOffset",
+                "mIsDragging",
+                "mAutoHideAnimator",
+                "mAnimatingShow",
+                "mAutoHideDelay",
+                "DEFAULT_AUTO_HIDE_DELAY",
+                "mAutoHideEnabled",
+                "mHideRunnable"
+            ],
+            "Methods": []
+        },
+        "Api": {
+            "Attributes": [
+                "API_BASE",
+                "PACKAGE_STATE",
+                "COMPANY_QUERY"
+            ],
+            "Methods": []
+        },
+        "ReminderService": {
+            "Attributes": [
+                "preference",
+                "compositeDisposable"
+            ],
+            "Methods": [
+                "onCreate",
+                "onBind",
+                "onHandleIntent",
+                "onStartCommand",
+                "onDestroy",
+                "buildNotification",
+                "setNotifications",
+                "refreshPackage",
+                "pushNotification"
+            ]
+        },
+        "CompanyRecognition": {
+            "Attributes": [
+                "companyCode",
+                "number",
+                "companyCode",
+                "id",
+                "noPre"
+            ],
+            "Methods": []
+        },
+        "Auto": {
+            "Attributes": [
+                "companyCode",
+                "id",
+                "noPre"
+            ],
+            "Methods": []
+        },
+        "Package": {
+            "Attributes": [
+                "STATUS_FAILED",
+                "STATUS_NORMAL",
+                "STATUS_ON_THE_WAY",
+                "STATUS_DELIVERED",
+                "STATUS_RETURNED",
+                "STATUS_RETURNING",
+                "STATUS_OTHER",
+                "message",
+                "number",
+                "condition",
+                "company",
+                "status",
+                "state",
+                "data",
+                "pushable",
+                "name",
+                "companyChineseName",
+                "timestamp"
+            ],
+            "Methods": []
+        },
+        "PackageWithCompany": {
+            "Attributes": [
+                "pkg",
+                "company"
+            ],
+            "Methods": []
+        },
+        "Company": {
+            "Attributes": [
+                "name",
+                "id",
+                "tel",
+                "website",
+                "alphabet",
+                "avatar"
+            ],
+            "Methods": []
+        },
+        "PackageStatus": {
+            "Attributes": [
+                "time",
+                "ftime",
+                "location"
+            ],
+            "Methods": []
+        },
+        "PackageAndCompanyPairs": {
+            "Attributes": [
+                "packages",
+                "companies"
+            ],
+            "Methods": []
+        },
+        "PackagesRepository": {
+            "Attributes": [
+                "INSTANCE",
+                "packagesRemoteDataSource",
+                "packagesLocalDataSource",
+                "cachedPackages"
+            ],
+            "Methods": [
+                "getInstance",
+                "destroyInstance",
+                "getPackages",
+                "getPackage",
+                "savePackage",
+                "deletePackage",
+                "refreshPackages",
+                "refreshPackage",
+                "setAllPackagesRead",
+                "setPackageReadable",
+                "isPackageExist",
+                "updatePackageName",
+                "searchPackages",
+                "getPackageWithNumber",
+                "getPackageWithNumberFromLocalRepository"
+            ]
+        },
+        "CompaniesDataSource": {
+            "Attributes": [],
+            "Methods": [
+                "getCompanies",
+                "getCompany",
+                "searchCompanies"
+            ]
+        },
+        "CompaniesRepository": {
+            "Attributes": [
+                "INSTANCE",
+                "localDataSource"
+            ],
+            "Methods": [
+                "getCompanies",
+                "getCompany",
+                "searchCompanies"
+            ]
+        },
+        "PackagesDataSource": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "CompaniesLocalDataSource": {
+            "Attributes": [
+                "INSTANCE"
+            ],
+            "Methods": [
+                "getInstance",
+                "getCompanies",
+                "getCompany",
+                "searchCompanies"
+            ]
+        },
+        "PackagesLocalDataSource": {
+            "Attributes": [
+                "INSTANCE"
+            ],
+            "Methods": [
+                "getInstance",
+                "destroyInstance",
+                "getPackages",
+                "getPackage",
+                "savePackage",
+                "deletePackage",
+                "refreshPackages",
+                "refreshPackage",
+                "setAllPackagesRead",
+                "setPackageReadable",
+                "isPackageExist",
+                "updatePackageName",
+                "searchPackages"
+            ]
+        },
+        "PackagesRemoteDataSource": {
+            "Attributes": [],
+            "Methods": [
+                "getPackages",
+                "getPackage",
+                "savePackage",
+                "deletePackage",
+                "refreshPackages",
+                "refreshPackage",
+                "setAllPackagesRead",
+                "setPackageReadable",
+                "isPackageExist",
+                "updatePackageName",
+                "searchPackages"
+            ]
+        },
+        "CaptureActivity": {
+            "Attributes": [
+                "cameraManager",
+                "handler",
+                "inactivityTimer",
+                "beepManager",
+                "scanPreview",
+                "scanContainer",
+                "scanCropView",
+                "scanLine",
+                "mCropRect",
+                "isHasSurface"
+            ],
+            "Methods": [
+                "onCreate",
+                "onResume",
+                "onPause",
+                "onDestroy",
+                "onOptionsItemSelected",
+                "surfaceCreated",
+                "surfaceDestroyed",
+                "surfaceChanged",
+                "handleDecode",
+                "initCamera",
+                "restartPreviewAfterDelay",
+                "getCropRect",
+                "initCrop"
+            ]
+        },
+        "OpenCameraInterface": {
+            "Attributes": [],
+            "Methods": [
+                "open"
+            ]
+        }
+    },
+    "associations": [
+        ["ReminderService", "SettingsFragment"],
+        ["OnboardingActivity", "OnboardingFragment"],
+        ["CompanyDetailContract", "CompanyDetailFragment"],
+        ["CompanyDetailActivity", "CompanyDetailFragment"],
+        ["CompaniesFragment", "CompanyDetailFragment"],
+        ["CompaniesAdapter", "CompanyDetailFragment"],
+        ["CompanyDetailFragment", "Package"],
+        ["CompanyDetailFragment", "PackageWithCompany"],
+        ["Company", "CompanyDetailFragment"],
+        ["CompanyDetailFragment", "PackageAndCompanyPairs"],
+        ["CompanyDetailFragment", "PackagesRepository"],
+        ["CompanyDetailFragment", "PackagesDataSource"],
+        ["CompanyDetailFragment", "PackagesLocalDataSource"],
+        ["CompanyDetailFragment", "PackagesRemoteDataSource"],
+        ["CompanyDetailActivity", "CompanyDetailContract"],
+        ["CompaniesFragment", "CompanyDetailContract"],
+        ["CompaniesAdapter", "CompanyDetailContract"],
+        ["CompanyDetailContract", "Package"],
+        ["CompanyDetailContract", "PackageWithCompany"],
+        ["Company", "CompanyDetailContract"],
+        ["CompanyDetailContract", "PackageAndCompanyPairs"],
+        ["CompanyDetailContract", "PackagesRepository"],
+        ["CompanyDetailContract", "PackagesDataSource"],
+        ["CompanyDetailContract", "PackagesLocalDataSource"],
+        ["CompanyDetailContract", "PackagesRemoteDataSource"],
+        ["CompanyDetailActivity", "CompanyDetailActivity"],
+        ["CompaniesFragment", "CompanyDetailActivity"],
+        ["CompaniesAdapter", "CompanyDetailActivity"],
+        ["CompanyDetailActivity", "Package"],
+        ["CompanyDetailActivity", "PackageWithCompany"],
+        ["Company", "CompanyDetailActivity"],
+        ["CompanyDetailActivity", "PackageAndCompanyPairs"],
+        ["CompanyDetailActivity", "PackagesRepository"],
+        ["CompanyDetailActivity", "PackagesDataSource"],
+        ["CompanyDetailActivity", "PackagesLocalDataSource"],
+        ["CompanyDetailActivity", "PackagesRemoteDataSource"],
+        ["SearchActivity", "SearchFragment"],
+        ["PackagesFragment", "SearchFragment"],
+        ["PackageDetailsFragment", "SearchFragment"],
+        ["PackageDetailsContract", "SearchFragment"],
+        ["CompanyRecognition", "SearchFragment"],
+        ["Auto", "SearchFragment"],
+        ["Package", "SearchFragment"],
+        ["PackageWithCompany", "SearchFragment"],
+        ["Company", "SearchFragment"],
+        ["PackageAndCompanyPairs", "SearchFragment"],
+        ["PackagesRepository", "SearchFragment"],
+        ["PackagesDataSource", "SearchFragment"],
+        ["PackagesLocalDataSource", "SearchFragment"],
+        ["PackagesRemoteDataSource", "SearchFragment"],
+        ["SearchActivity", "SearchActivity"],
+        ["PackagesFragment", "SearchActivity"],
+        ["PackageDetailsFragment", "SearchActivity"],
+        ["PackageDetailsContract", "SearchActivity"],
+        ["CompanyRecognition", "SearchActivity"],
+        ["Auto", "SearchActivity"],
+        ["Package", "SearchActivity"],
+        ["PackageWithCompany", "SearchActivity"],
+        ["Company", "SearchActivity"],
+        ["PackageAndCompanyPairs", "SearchActivity"],
+        ["PackagesRepository", "SearchActivity"],
+        ["PackagesDataSource", "SearchActivity"],
+        ["PackagesLocalDataSource", "SearchActivity"],
+        ["PackagesRemoteDataSource", "SearchActivity"],
+        ["Package", "PackageFilterType"],
+        ["PackageFilterType", "PackageWithCompany"],
+        ["Company", "PackageFilterType"],
+        ["PackageAndCompanyPairs", "PackageFilterType"],
+        ["PackageFilterType", "PackagesRepository"],
+        ["PackageFilterType", "PackagesDataSource"],
+        ["PackageFilterType", "PackagesLocalDataSource"],
+        ["PackageFilterType", "PackagesRemoteDataSource"],
+        ["PackagesContract", "PackagesFragment"],
+        ["PackageDetailsFragment", "PackagesContract"],
+        ["PackageDetailsContract", "PackagesContract"],
+        ["CompanyRecognition", "PackagesContract"],
+        ["Auto", "PackagesContract"],
+        ["Package", "PackagesContract"],
+        ["PackageWithCompany", "PackagesContract"],
+        ["Company", "PackagesContract"],
+        ["PackageAndCompanyPairs", "PackagesContract"],
+        ["PackagesContract", "PackagesRepository"],
+        ["PackagesContract", "PackagesDataSource"],
+        ["PackagesContract", "PackagesLocalDataSource"],
+        ["PackagesContract", "PackagesRemoteDataSource"],
+        ["PackageDetailsFragment", "PackagesFragment"],
+        ["PackageDetailsContract", "PackagesFragment"],
+        ["CompanyRecognition", "PackagesFragment"],
+        ["Auto", "PackagesFragment"],
+        ["Package", "PackagesFragment"],
+        ["PackageWithCompany", "PackagesFragment"],
+        ["Company", "PackagesFragment"],
+        ["PackageAndCompanyPairs", "PackagesFragment"],
+        ["PackagesFragment", "PackagesRepository"],
+        ["PackagesDataSource", "PackagesFragment"],
+        ["PackagesFragment", "PackagesLocalDataSource"],
+        ["PackagesFragment", "PackagesRemoteDataSource"],
+        ["PackageDetailsContract", "PackageDetailsFragment"],
+        ["CompanyRecognition", "PackageDetailsFragment"],
+        ["Auto", "PackageDetailsFragment"],
+        ["Package", "PackageDetailsFragment"],
+        ["PackageDetailsFragment", "PackageWithCompany"],
+        ["Company", "PackageDetailsFragment"],
+        ["PackageAndCompanyPairs", "PackageDetailsFragment"],
+        ["PackageDetailsFragment", "PackagesRepository"],
+        ["PackageDetailsFragment", "PackagesDataSource"],
+        ["PackageDetailsFragment", "PackagesLocalDataSource"],
+        ["PackageDetailsFragment", "PackagesRemoteDataSource"],
+        ["CompanyRecognition", "PackageDetailsContract"],
+        ["Auto", "PackageDetailsContract"],
+        ["Package", "PackageDetailsContract"],
+        ["PackageDetailsContract", "PackageWithCompany"],
+        ["Company", "PackageDetailsContract"],
+        ["PackageAndCompanyPairs", "PackageDetailsContract"],
+        ["PackageDetailsContract", "PackagesRepository"],
+        ["PackageDetailsContract", "PackagesDataSource"],
+        ["PackageDetailsContract", "PackagesLocalDataSource"],
+        ["PackageDetailsContract", "PackagesRemoteDataSource"],
+        ["CompaniesAdapter", "CompaniesFragment"],
+        ["CompaniesFragment", "Company"],
+        ["CompaniesFragment", "PackageAndCompanyPairs"],
+        ["CompaniesFragment", "PackagesRepository"],
+        ["CompaniesFragment", "PackagesDataSource"],
+        ["CompaniesFragment", "PackagesLocalDataSource"],
+        ["CompaniesFragment", "PackagesRemoteDataSource"],
+        ["CompaniesContract", "CompanyRecognition"],
+        ["Auto", "CompaniesContract"],
+        ["CompaniesContract", "Package"],
+        ["CompaniesContract", "PackageWithCompany"],
+        ["CompaniesContract", "Company"],
+        ["CompaniesContract", "PackageAndCompanyPairs"],
+        ["CompaniesContract", "PackagesRepository"],
+        ["CompaniesContract", "PackagesDataSource"],
+        ["CompaniesContract", "PackagesLocalDataSource"],
+        ["CompaniesContract", "PackagesRemoteDataSource"],
+        ["FastScrollRecyclerView", "FastScroller"],
+        ["FastScrollRecyclerView", "FastScrollRecyclerView"],
+        ["Package", "Timeline"],
+        ["PackageWithCompany", "Timeline"],
+        ["Company", "Timeline"],
+        ["PackageAndCompanyPairs", "Timeline"],
+        ["PackagesRepository", "Timeline"],
+        ["PackagesDataSource", "Timeline"],
+        ["PackagesLocalDataSource", "Timeline"],
+        ["PackagesRemoteDataSource", "Timeline"],
+        ["Api", "Package"],
+        ["Api", "PackageWithCompany"],
+        ["Api", "Company"],
+        ["Api", "PackageAndCompanyPairs"],
+        ["Api", "PackagesRepository"],
+        ["Api", "PackagesDataSource"],
+        ["Api", "PackagesLocalDataSource"],
+        ["Api", "PackagesRemoteDataSource"],
+        ["Auto", "CompanyRecognition"],
+        ["CompanyRecognition", "Package"],
+        ["CompanyRecognition", "PackageWithCompany"],
+        ["Company", "CompanyRecognition"],
+        ["CompanyRecognition", "PackageAndCompanyPairs"],
+        ["CompanyRecognition", "PackagesRepository"],
+        ["CompanyRecognition", "PackagesDataSource"],
+        ["CompanyRecognition", "PackagesLocalDataSource"],
+        ["CompanyRecognition", "PackagesRemoteDataSource"],
+        ["Auto", "Package"],
+        ["Auto", "PackageWithCompany"],
+        ["Auto", "Company"],
+        ["Auto", "PackageAndCompanyPairs"],
+        ["Auto", "PackagesRepository"],
+        ["Auto", "PackagesDataSource"],
+        ["Auto", "PackagesLocalDataSource"],
+        ["Auto", "PackagesRemoteDataSource"],
+        ["Package", "PackageWithCompany"],
+        ["PackageWithCompany", "PackageWithCompany"],
+        ["Company", "PackageWithCompany"],
+        ["PackageAndCompanyPairs", "PackageWithCompany"],
+        ["PackageWithCompany", "PackagesRepository"],
+        ["PackageWithCompany", "PackagesDataSource"],
+        ["PackageWithCompany", "PackagesLocalDataSource"],
+        ["PackageWithCompany", "PackagesRemoteDataSource"],
+        ["Package", "PackageAndCompanyPairs"],
+        ["Company", "PackageAndCompanyPairs"],
+        ["PackageAndCompanyPairs", "PackageAndCompanyPairs"],
+        ["PackageAndCompanyPairs", "PackagesRepository"],
+        ["PackageAndCompanyPairs", "PackagesDataSource"],
+        ["PackageAndCompanyPairs", "PackagesLocalDataSource"],
+        ["PackageAndCompanyPairs", "PackagesRemoteDataSource"],
+        ["PackagesRepository", "PackagesRepository"],
+        ["PackagesDataSource", "PackagesRepository"],
+        ["PackagesLocalDataSource", "PackagesRepository"],
+        ["PackagesRemoteDataSource", "PackagesRepository"],
+        ["CompaniesDataSource", "CompaniesRepository"],
+        ["CompaniesDataSource", "PackagesDataSource"],
+        ["CompaniesDataSource", "PackagesLocalDataSource"],
+        ["CompaniesDataSource", "PackagesRemoteDataSource"],
+        ["CompaniesRepository", "CompaniesRepository"],
+        ["CompaniesRepository", "PackagesDataSource"],
+        ["CompaniesRepository", "PackagesLocalDataSource"],
+        ["CompaniesRepository", "PackagesRemoteDataSource"],
+        ["CompaniesLocalDataSource", "CompaniesLocalDataSource"],
+        ["CompaniesLocalDataSource", "PackagesLocalDataSource"],
+        ["CompaniesLocalDataSource", "PackagesRemoteDataSource"],
+        ["PackagesLocalDataSource", "PackagesLocalDataSource"],
+        ["PackagesLocalDataSource", "PackagesRemoteDataSource"],
+        ["PackagesRemoteDataSource", "PackagesRemoteDataSource"]
+    ]
+}

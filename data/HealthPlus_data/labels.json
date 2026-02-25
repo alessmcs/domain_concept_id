@@ -1,0 +1,324 @@
+{
+    "classes": {   
+    "Admin" : {
+        "Attributes" : [
+            "dbOperator", 
+            "username", 
+            "userID", 
+            "userType"
+        ],
+        "Methods": [
+            "createNewUser",
+            "checkConnection",
+            "lastTotalIncome",
+            "pharmacyIncome",
+            "laboratorIncome",
+            "appointmentIncome",
+            "getSysUser",
+            "suspendUser",
+            "unsuspendUser",
+            "resetPassword",
+            "checkUser",
+            "saveLogin",
+            "saveLogout",
+            "sendMessage",
+            "deleteMessage",
+            "getMessages",
+            "getProfilePic"
+        ]
+    },
+    "Appointment" : {
+        "Attributes" : [
+            "startTime",
+            "endTime"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "Availability" : {
+        "Attributes" : [
+            "date",
+            "time",
+            "id"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "Bill" : {
+        "Attributes" : [
+            "patientID",
+            "date",
+            "doctor",
+            "hospital",
+            "pharmacy",
+            "laboratory",
+            "appointment",
+            "billID"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "Cashier" : {
+        "Attributes" : [
+            
+        ], 
+        "Methods" : [
+            "bill",
+            "getProfileInfo",
+            "removeFromTempBill",
+            "getBillInfo",
+            "refund",
+            "getWaitingRefunds",
+            "makeRefund",
+            "getNoOfRefunds",
+            "getPaymentHistory",
+            "updateProfileInfo",
+            "updateAccountInfo",
+            "getPatientDetails",
+            "getDoctorName",
+            "getCancelledDocAppointments",
+            "getCancelledLabAppointments"
+        ]
+    }, 
+    "Doctor" : {
+        "Attributes" : [
+            "slmcRedNo"
+        ], 
+        "Methods" : [
+            "getUsername",
+            "getProfileInfo",
+            "updateProfileInfo",
+            "updateDoctorInfo",
+            "updateAccountInfo",
+            "doctorTimeTable",
+            "removeDoctorTime",
+            "doctorTimeTableAddSlot",
+            "getAppointments",
+            "getTestResults",
+            "getPatientInfo",
+            "searchByName",
+            "diagnose",
+            "bill",
+            "getLabFee", 
+            "allergies",
+            "prescribe",
+            "getDrugInfo",
+            "getGenericInfo",
+            "getDrugBrandInfo",
+            "getPatientAttendance",
+            "getTodatAppointments",
+            "getTestInfo",
+            "getLabPatientInfo"
+        ]
+    }, 
+    "Drug" : {
+        "Attributes" : [
+            "name",
+            "type",
+            "unit",
+            "price",
+            "amount",
+            "suppliers"
+        ], 
+        "Methods" : [
+            
+        ]
+    }, 
+    "LabAssistant" : {
+        "Attributes" : [
+            "labAssistantID"
+        ], 
+        "Methods" : [
+            "getProfileInfo",
+            "updateProfileInfo",
+            "updateLabAssistantInfo",
+            "updateAccountInfo",
+            "getLabTestNames",
+            "getLabTestInfo",
+            "getPatientDetails",
+            "getPrescriptions",
+            "lastMonthsAppointments",
+            "lastMonthsReports",
+            "getAppointments",
+            "getTodayAppointments",
+            "UrineFullReport",
+            "LipidTest",
+            "BloodGroupingTest",
+            "completeBloodCount",
+            "RenalFunctionTest",
+            "SeriumCreatinePhosphokinaseTotal",
+            "SeriumCreatinePhosphokinase",
+            "liverFunctionTest",
+            "getUrineFullReport",
+            "getLipidTestReport",
+            "getBloodGroupingRh",
+            "getCompleteBloodCount",
+            "getLiverFunctionTest",
+            "getRenalFunctionTest",
+            "getSeriumCreatinePhosphokinaseTotal",
+            "getSeriumCreatinePhosphokinase",
+            "getPatientInfo"
+        ]
+    }, 
+    "LabReport" : {
+        "Attributes" : [
+            "consistuent",
+            "result"
+        ],
+        "Methods" : [
+
+        ]
+    }, 
+    "Message" : {
+        "Attributes": [
+            "sender",
+            "subject",
+            "message"
+        ],
+        "Methods": [
+
+        ]
+    }, 
+    "Pharmacist" : {
+        "Attributes": [
+            "pharmacistID"
+        ],
+        "Methods" : [
+            "getProfileInfo",
+            "getPrescriptionInfo",
+            "getPrescribedDoc",
+            "getpharmacyHistory",
+            "getDrugInfo",
+            "addNewDrug",
+            "addNewDrug",
+            "getStockInfo",
+            "getStockSummary",
+            "getSupplierSummary",
+            "getSupplierNames",
+            "getDrugPrices", 
+            "getGenericNames",
+            "getBrandNames",
+            "getDrugGenericInfo",
+            "getDrugNames",
+            "getDrugAmounts",
+            "getDrugStockID",
+            "reduceStock",
+            "checkForBrandName",
+            "checkForGenName",
+            "addNewBrand",
+            "addNewSupplier",
+            "updateStock",
+            "updateProfileInfo",
+            "updatePharmacistInfo",
+            "updateAccountInfo",
+            "bill"
+        ]
+    }, 
+    "Prescription" : {
+        "Attributes" : [
+            "prescID",
+            "date",
+            "doctor"
+        ],
+        "Methods": [
+            
+        ]
+    }, 
+    "Receptionist" : {
+        "Attributes" : [
+
+        ],
+        "Methods": [
+            "getProfileInfo",
+            "updateProfileInfo",
+            "updateAccountInfo",
+            "getDoctorTimeTable",
+            "getPatientInfo",
+            "setPatientInfo",
+            "updatePatientInfo",
+            "getLabTestInfo",
+            "getAppointments",
+            "makeAppointment",
+            "makeLabAppointment",
+            "doctorAppointmentAvailableTime",
+            "getDoctorSummary",
+            "getCurrentlyAvailableDoctors",
+            "getConsultationAreas",
+            "getDoctor",
+            "getDoctors",
+            "getAvailableDays",
+            "getLabAvailableDays",
+            "getLabAvailableTimeSlots",
+            "getLabTestID",
+            "getAvailableTime",
+            "cancelAppointment",
+            "getAppointmentDetails",
+            "refund",
+            "cancelLabAppointment",
+            "getAppointmentDetails",
+            "getDoctorDetails",
+            "getLabAppointmentDetails",
+            "getDocAppointments",
+            "getLabAppointments"
+        ]
+
+    }, 
+    "Refund" : {
+        "Attributes" : [
+            "patientID",
+            "date",
+            "billID",
+            "service"
+        ],
+        "Methods": [
+        ]
+    }, 
+    "User" : {
+        "Attributes": [
+            "username",
+            "userID",
+            "userType"
+        ],
+        "Methods" : [
+            "saveLogin",
+            "saveLogout",
+            "sendMessage",
+            "getMessage",
+            "deleteMessage"
+        ]
+    }
+}, 
+"associations" : [
+    ["Appointment", "Doctor"],
+    ["Availability", "Doctor"],
+    ["Bill", "Cashier"],
+    ["Bill", "Doctor"],
+    ["Bill", "User"],
+    ["Bill", "Appointment"],
+    ["Cashier", "Refund"],
+    ["Cashier", "User"],
+    ["Cashier", "Doctor"],
+    ["Doctor", "User"],
+    ["Doctor", "Drug"],
+    ["Doctor", "Prescription"],
+    ["Drug", "Pharmacist"],
+    ["LabAssistant", "Prescription"],
+    ["LabAssistant", "LabReport"],
+    ["LabAssistant", "User"],
+    ["LabAssistant", "Appointment"],
+    ["Message", "User"],
+    ["Pharmacist", "Prescription"],
+    ["Pharmacist", "Bill"],
+    ["Prescription", "Drug"],
+    ["Receptionist", "User"],
+    ["Receptionist", "Appointment"],
+    ["Receptionist", "Doctor"],
+    ["Receptionist", "Availability"],
+    ["Receptionist", "Refund"],
+    ["Refund", "User"],
+    ["Refund", "Bill"]
+]
+}
