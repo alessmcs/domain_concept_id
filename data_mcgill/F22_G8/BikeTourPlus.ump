@@ -1,0 +1,94 @@
+namespace ca.mcgill.ecse.biketourplus.model;
+
+use ParticipantStateMachine.ump
+use BikeTourPlusPersistence.ump
+
+
+class BikeTourPlus {
+  Date startDate;
+  Integer nrWeeks;
+  Integer priceOfGuidePerWeek;
+  1 <@>- 0..1 Manager manager;
+  1 <@>- * Guide guides;
+  1 <@>- * Participant participants;
+  1 <@>- * BookedItem bookedItems;
+  1 <@>- * Gear gear;
+  1 <@>- * Combo combos;
+  1 <@>- * ComboItem comboItems;
+  1 <@>- * Lodge lodges;
+  1 <@>- * BikeTour bikeTours;
+}
+
+class User {
+  abstract;
+  unique email;
+  password;
+}
+
+class Manager {
+  isA User;
+}
+
+class NamedUser {
+  abstract;
+  isA User;
+  name;
+  emergencyContact;
+}
+
+class Guide {
+  isA NamedUser;
+}
+
+class Participant {
+  isA NamedUser;
+  Integer nrWeeks;
+  Integer weekAvailableFrom;
+  Integer weekAvailableUntil;
+  Boolean lodgeRequired;
+  authorizationCode;
+  Integer refundedPercentageAmount;
+}
+
+associationClass BookedItem {
+  Integer quantity;
+  * Participant participant;
+  * BookableItem item;
+}
+
+class BookableItem {
+  abstract;
+  unique name;
+}
+
+class Gear {
+  isA BookableItem;
+  Integer pricePerWeek;
+}
+
+class Combo {
+  isA BookableItem;
+  Integer discount;
+}
+
+associationClass ComboItem {
+  Integer quantity;
+  2..* Combo combo;
+  * Gear gear;
+}
+
+class Lodge {
+  unique name;
+  address;
+  enum LodgeRating { OneStar, TwoStars, ThreeStars, FourStars, FiveStars }
+  LodgeRating rating;
+} 
+
+class BikeTour {
+  unique Integer id;
+  Integer startWeek;
+  Integer endWeek;
+  0..1 -- * Participant participants;
+  * -- 1 Guide guide;
+  * -- 0..1 Lodge lodge;
+}

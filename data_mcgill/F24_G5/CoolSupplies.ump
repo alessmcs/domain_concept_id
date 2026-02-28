@@ -1,0 +1,86 @@
+namespace ca.mcgill.ecse.coolsupplies.model;
+use CoolSuppliesState.ump;
+
+use CoolSuppliesPersistence.ump;
+
+class CoolSupplies {
+  depend ca.mcgill.ecse.coolsupplies.model.BundleItem.PurchaseLevel;
+  1 <@>- 0..1 SchoolAdmin admin;
+  1 <@>- * Student students;
+  1 <@>- * Parent parents;
+  1 <@>- * Item items;
+  1 <@>- * GradeBundle bundles;
+  1 <@>- * BundleItem bundleItems;
+  1 <@>- * Order orders;
+  1 <@>- * OrderItem orderItems;
+  1 <@>- * Grade grades;
+}
+
+class User {
+  abstract;
+  unique immutable email;
+  password;
+}
+
+class SchoolAdmin {
+  isA User;
+}
+
+class Parent {
+  depend ca.mcgill.ecse.coolsupplies.model.BundleItem.PurchaseLevel;
+  isA User;
+  name;
+  Integer phoneNumber;
+  0..1 -- * Student students;
+}
+
+class Student {
+  depend ca.mcgill.ecse.coolsupplies.model.BundleItem.PurchaseLevel;
+  unique name;
+}
+
+class Order {
+  depend ca.mcgill.ecse.coolsupplies.model.BundleItem.PurchaseLevel;
+  unique Integer number;
+  Date date;
+  PurchaseLevel level;
+  lazy authorizationCode;
+  lazy penaltyAuthorizationCode;
+  * -- 1 Parent parent;
+  * -- 1 Student student;
+}
+
+associationClass OrderItem {
+  Integer quantity;
+  * Order order;
+  * InventoryItem item;
+}
+
+class InventoryItem {
+  abstract;
+  unique name;
+}
+
+class Item {
+  isA InventoryItem;
+  Integer price;
+}
+
+class GradeBundle {
+  isA InventoryItem;
+  Integer discount;
+}
+
+associationClass BundleItem {
+  Integer quantity;
+  enum PurchaseLevel { Mandatory, Recommended, Optional }
+  PurchaseLevel level;
+  * GradeBundle bundle;
+  * Item item;
+}
+
+class Grade {
+  unique level;
+  1 -- 0..1 GradeBundle bundle;
+  1 -- * Student students;
+}

@@ -31,7 +31,7 @@ class ExLlamaArguments:
     )
 
     max_seq_len: Optional[int] = field(
-        default=32768,
+        default=4096,
         metadata={"help": "Maximum sequence length for input tokens."}
     )
 
