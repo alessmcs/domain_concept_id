@@ -1,60 +1,58 @@
 [
   {
     "name": "HealthPlus",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/HealthPlus_data/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/HealthPlus_data/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/HealthPlus_data/metrics.csv", 
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/HealthPlus_data/labels.json"
+    "class-diagram": "data/HealthPlus_data/project.xml",
+    "readme": "data/HealthPlus_data/README.md",
+    "csv": "data/HealthPlus_data/metrics.csv",
+    "labels": "data/HealthPlus_data/labels.json"
   },
   {
     "name": "Warehouse Management",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Warehouse-management/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Warehouse-management/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Warehouse-management/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Warehouse-management/labels.json"
-  }, 
+    "class-diagram": "data/Warehouse-management/project.xml",
+    "readme": "data/Warehouse-management/README.md",
+    "csv": "data/Warehouse-management/metrics.csv",
+    "labels": "data/Warehouse-management/labels.json"
+  },
   {
     "name": "Bookstore",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Bookstore/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Bookstore/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Bookstore/metrics.csv",
-    "labels": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Bookstore/labels.json"
+    "class-diagram": "data/Bookstore/project.xml",
+    "readme": "data/Bookstore/README.md",
+    "csv": "data/Bookstore/metrics.csv",
+    "labels": "data/Bookstore/labels.json"
   },
   {
     "name": "Espresso",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/labels.json"
+    "class-diagram": "data/Espresso/project.xml",
+    "readme": "data/Espresso/README.md",
+    "csv": "data/Espresso/metrics.csv",
+    "labels": "data/Espresso/labels.json"
   },
   {
     "name": "Graphhopper",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Graphhopper/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Graphhopper/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Graphhopper/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Graphhopper/labels.json"
+    "class-diagram": "data/Graphhopper/project.xml",
+    "readme": "data/Graphhopper/README.md",
+    "csv": "data/Graphhopper/metrics.csv",
+    "labels": "data/Graphhopper/labels.json"
   },
   {
     "name": "Hotel Management",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Hotel-Management/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Hotel-Management/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Hotel-Management/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Hotel-Management/labels.json"
+    "class-diagram": "data/Hotel-Management/project.xml",
+    "readme": "data/Hotel-Management/README.md",
+    "csv": "data/Hotel-Management/metrics.csv",
+    "labels": "data/Hotel-Management/labels.json"
   },
   {
     "name": "OpenKoda",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/OpenKoda/project.xml",
-    "readme": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/OpenKoda/README.md",
-    "csv" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/OpenKoda/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/OpenKoda/labels.json"
+    "class-diagram": "data/OpenKoda/project.xml",
+    "readme": "data/OpenKoda/README.md",
+    "csv": "data/OpenKoda/metrics.csv",
+    "labels": "data/OpenKoda/labels.json"
   },
   {
     "name": "F20_G14",
-    "class-diagram": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data_mcgill/F20_G14/project.xml",
+    "class-diagram": "data_mcgill/F20_G14/project.xml",
     "readme": "",
-    "csv": "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data_mcgill/F20_G14/metrics.csv",
-    "labels" : "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data_mcgill/F20_G14/FlexiBook.ump"
-
+    "csv": "data_mcgill/F20_G14/metrics.csv",
+    "labels": "data_mcgill/F20_G14/FlexiBook.ump"
   }
-
 ]

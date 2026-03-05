@@ -199,7 +199,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     reclassified_data = inference.classify_classes(json_data = data)
 
     xmi_base = os.path.splitext(os.path.basename(xml_file))[0]
-    output_json_file_2 = f"/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/model_outputs/model_classes_result.json"
+    output_json_file_2 = f"model_outputs/{xmi_base}_classes_result.json"
 
     with open(output_json_file_2, "w", encoding="utf-8") as f:
         json.dump(reclassified_data, f, indent=4)
@@ -231,7 +231,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # Step 8: Remove irrelevant methods 
 
     # Setup (model_method_results.json, project_output2.json)
-    model_output_file = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/model_outputs/model_method_results.json"
+    model_output_file = "model_outputs/model_method_results.json"
     with open(model_output_file, "w", encoding="utf-8") as f:
         pass # clear the file 
 
@@ -342,7 +342,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     with open(methods_xml_path, "r", encoding="utf-8") as src, open(attr_xml_path, "w", encoding="utf-8") as dst:
         dst.write(src.read())
 
-    model_output_file = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/model_outputs/model_attr_results.json"
+    model_output_file = "model_outputs/model_attr_results.json"
     with open(model_output_file, "w", encoding="utf-8") as f:
         pass # clear the file 
 
@@ -486,6 +486,40 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
 
     # TODO: include Associations!?
 
+def run_all_projects(model_args):
+    base_dir = "data_mcgill"
+
+    for project in sorted(os.listdir(base_dir)):
+        project_path = os.path.join(base_dir, project)
+
+        if not os.path.isdir(project_path):
+            continue
+
+        print("\n===================================")
+        print(f"Running project: {project}")
+        print("===================================\n")
+
+        xml_file = os.path.join(project_path, "project.xml")
+        readme_file = os.path.join(project_path, "readme.md")
+
+        # optional files
+        labels_file = os.path.join(project_path, "labels.json")
+        results_file = os.path.join(project_path, "results.json")
+
+        if not os.path.exists(xml_file):
+            print(f"Skipping {project} (no project.xml)")
+            continue
+
+        try:
+            main(
+                xml_file=xml_file,
+                readme_file=readme_file,
+                model_args=model_args,
+                labels_file=labels_file,
+                results_file=results_file
+            )
+        except Exception as e:
+            print(f"Error running {project}: {e}")
     
 
 def fetch_sources() :
@@ -504,17 +538,20 @@ if __name__ == "__main__":
 
     ## MAIN FLOW 
     print("Fetching sources...")
-    xml_file, readme_file, csv_file, labels_file= fetch_sources()
+    # xml_file, readme_file, csv_file, labels_file= fetch_sources()
 
     # Parse ExLlamaArguments using HF parser 
     parser = HfArgumentParser(ExLlamaArguments)
     model_args = parser.parse_args_into_dataclasses()[0]
 
-    no_of_iterations = input("How many iterations do you want to run? ")
+    # no_of_iterations = input("How many iterations do you want to run? ")
 
-    for i in range(int(no_of_iterations)):
-        print(f"\nRunning iteration {i+1} of {no_of_iterations}...")
-        main(xml_file, readme_file, model_args, labels_file, csv_file, i)
+    # for i in range(int(no_of_iterations)):
+    #     print(f"\nRunning iteration {i+1} of {no_of_iterations}...")
+    #     main(xml_file, readme_file, model_args, labels_file, csv_file, i)
+
+
+    run_all_projects(model_args)
 
     ## TO TEST RELEVANT ATTRIBUTES 
     # output_xml_path = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/project_modified.xml"
