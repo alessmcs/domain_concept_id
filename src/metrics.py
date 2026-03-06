@@ -106,18 +106,14 @@ def compare(labels, output, results_file, iter_no):
 
         output_associations = output.get("associations", [])
 
-        assos_tp_count = 0
-        assos_fp_count = 0
-        assos_precision = 0
-
-        for assoc in output_associations: 
-            if [assoc[0], assoc[1]] in expected_associations or [assoc[1], assoc[0]] in expected_associations:
-                assos_tp_count += 1
-            elif [assoc[0], assoc[1]] not in expected_associations:
-                assos_fp_count += 1
+        # Convert to sets of tuples for comparison (both directions count as same association)
+        expected_pairs = {tuple(sorted(assoc)) for assoc in expected_associations}
+        output_pairs = {tuple(sorted(assoc)) for assoc in output_associations}
+        
+        assos_tp_count = len(expected_pairs & output_pairs)
+        assos_fp_count = len(output_pairs - expected_pairs)
         
         assos_precision = assos_tp_count / (assos_tp_count + assos_fp_count) if (assos_tp_count + assos_fp_count) > 0 else 0
-
 
         print(f"Association precision: {assos_precision}")
 
@@ -132,59 +128,182 @@ def compare(labels, output, results_file, iter_no):
     # Write results to CSV
     with open(results_file, 'a', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([pd.Timestamp.now(), iter_no, class_precision, avg_method_precision, avg_attr_precision, total_avg_precision])
-
+        writer.writerow([pd.Timestamp.now(), iter_no, class_precision, avg_method_precision, avg_attr_precision, assos_precision, total_avg_precision])
+        # RELAXED asso precision
     return total_avg_precision
 
 def compare_ump(gt, output, results_file, iter_no):
     # gt is the uml file that we're comparing it to (ground truth)
+    
+    print("\n" + "="*60)
+    print("COMPARE_UMP - Starting metrics comparison")
+    print("="*60)
+    print(f"Results file: {results_file}")
+    print(f"Iteration: {iter_no}")
 
+    def normalize_attribute(attr):
+        """
+        Normalize attribute by extracting just the name (before any colon/type annotation).
+        Examples:
+            'noShow : int' -> 'noShow'
+            'name' -> 'name'
+            'username : String' -> 'username'
+        """
+        if ':' in attr:
+            return attr.split(':')[0].strip()
+        return attr.strip()
+
+    # Initialize CSV with headers if needed
     with open(results_file, 'a', newline='') as f:
         writer = csv.writer(f)
         if f.tell() == 0:  # Check if the file is empty
-            writer.writerow(['dateTime', 'iteration#', 'class_precision', 'method_precision', 'attr_precision', 'avg_precision'])
+            print("Creating CSV headers...")
+            writer.writerow(['dateTime', 'iteration#', 'class_precision', 'method_precision', 'attr_precision', 'asso_precision_relaxed', 'avg_precision'])
 
+    # Extract classes from ground truth and output
+    print("\nExtracting classes from ground truth and output...")
     expected_classes = gt["classes"]
     output_classes = output["classes"]
 
     expected_class_names = set(expected_classes.keys())
     output_class_names = set(output_classes.keys())
+    
+    print(f"Expected classes ({len(expected_class_names)}): {sorted(expected_class_names)}")
+    print(f"Output classes ({len(output_class_names)}): {sorted(output_class_names)}")
+    
+    # Debug: Check structure of first class in each
+    if expected_class_names:
+        sample_gt = list(expected_class_names)[0]
+        print(f"\nGround truth structure (sample: {sample_gt}): {expected_classes[sample_gt].keys()}")
+    if output_class_names:
+        sample_out = list(output_class_names)[0]
+        print(f"Output structure (sample: {sample_out}): {output_classes[sample_out].keys()}")
 
     # Compute class precision
+    print("\nComputing class precision...")
     tp_classes = expected_class_names & output_class_names
     fp_classes = output_class_names - expected_class_names
     fn_classes = expected_class_names - output_class_names  
 
+    print(f"  True Positives (TP): {len(tp_classes)} - {sorted(tp_classes)}")
+    print(f"  False Positives (FP): {len(fp_classes)} - {sorted(fp_classes)}")
+    print(f"  False Negatives (FN): {len(fn_classes)} - {sorted(fn_classes)}")
+
     class_precision = len(tp_classes) / (len(tp_classes) + len(fp_classes)) if (len(tp_classes) + len(fp_classes)) > 0 else 0
+    print(f"  Class Precision: {class_precision:.4f}")
     
     # Attribute precision 
+    print("\nComputing attribute precision for matching classes...")
     attr_precision = []
     method_precision = []
 
     for ec in expected_class_names:
         if ec in output_class_names:
-            expected_attrs = set(expected_classes[ec]["attributes"])
-            output_attrs = set(output_classes[ec]["attributes"])
+            # Handle both lowercase "attributes" (from umpParser) and capitalized "Attributes" (from pipeline)
+            expected_attrs_raw = expected_classes[ec].get("attributes", expected_classes[ec].get("Attributes", []))
+            output_attrs_raw = output_classes[ec].get("Attributes", output_classes[ec].get("attributes", []))
+            
+            # Normalize attributes to extract just the name (before colon/type)
+            expected_attrs = set(normalize_attribute(attr) for attr in expected_attrs_raw)
+            output_attrs = set(normalize_attribute(attr) for attr in output_attrs_raw)
 
             tp_attrs = expected_attrs & output_attrs
             fp_attrs = output_attrs - expected_attrs
 
             precision_attr = len(tp_attrs) / (len(tp_attrs) + len(fp_attrs)) if (len(tp_attrs) + len(fp_attrs)) > 0 else 0
             attr_precision.append(precision_attr)
+            
+            print(f"  {ec}:")
+            print(f"    Expected attrs raw: {expected_attrs_raw}")
+            print(f"    Expected attrs normalized ({len(expected_attrs)}): {expected_attrs}")
+            print(f"    Output attrs raw: {output_attrs_raw}")
+            print(f"    Output attrs normalized ({len(output_attrs)}): {output_attrs}")
+            print(f"    TP: {len(tp_attrs)} {tp_attrs}")
+            print(f"    FP: {len(fp_attrs)} {fp_attrs}")
+            print(f"    Precision: {precision_attr:.4f}")
 
-            # Method precision
-            expected_methods = set(expected_classes[ec]["methods"])
-            output_methods = set(output_classes[ec]["methods"])
+            # # Method precision
+            # expected_methods = set(expected_classes[ec].get("methods", expected_classes[ec].get("Methods", [])))
+            # output_methods = set(output_classes[ec].get("Methods", output_classes[ec].get("methods", [])))
 
-            tp_methods = expected_methods & output_methods
-            fp_methods = output_methods - expected_methods
+            # tp_methods = expected_methods & output_methods
+            # fp_methods = output_methods - expected_methods
 
-            precision_method = len(tp_methods) / (len(tp_methods) + len(fp_methods)) if (len(tp_methods) + len(fp_methods)) > 0 else 0
-            method_precision.append(precision_method)
+            # precision_method = len(tp_methods) / (len(tp_methods) + len(fp_methods)) if (len(tp_methods) + len(fp_methods)) > 0 else 0
+            # method_precision.append(precision_method)
+
+    avg_attr_precision = np.mean(attr_precision) if attr_precision else 0
+    avg_method_precision = 0  # Not computed yet
+
+    # Association precision 
+    print("\nComputing association precision...")
+    expected_associations = gt.get("associations", [])
+    output_associations = output.get("associations", [])
+    
+    print(f"Expected associations: {expected_associations}")
+    print(f"Output associations: {output_associations}")
+    
+    # Convert to sets of tuples for easier comparison (handle both directions)
+    expected_pairs = set()
+    if isinstance(expected_associations, dict):
+        # If it's a dict (from umpParser), extract all association pairs
+        for src, assoc_list in expected_associations.items():
+            for assoc in assoc_list:
+                target = assoc.get("to") if isinstance(assoc, dict) else assoc
+                expected_pairs.add(tuple(sorted([src, target])))
+    elif isinstance(expected_associations, list):
+        # If it's a list (from output), convert to tuples
+        for assoc in expected_associations:
+            expected_pairs.add(tuple(sorted(assoc)))
+    
+    output_pairs = set()
+    for assoc in output_associations:
+        output_pairs.add(tuple(sorted(assoc)))
+    
+    print(f"Expected pairs (normalized): {expected_pairs}")
+    print(f"Output pairs (normalized): {output_pairs}")
+    
+    # Calculate association metrics
+    assos_tp_count = len(expected_pairs & output_pairs)
+    assos_fp_count = len(output_pairs - expected_pairs)
+    assos_fn_count = len(expected_pairs - output_pairs)
+    
+    assos_precision = assos_tp_count / (assos_tp_count + assos_fp_count) if (assos_tp_count + assos_fp_count) > 0 else 0
+    
+    print(f"  True Positives (TP): {assos_tp_count}")
+    print(f"  False Positives (FP): {assos_fp_count}")
+    print(f"  False Negatives (FN): {assos_fn_count}")
+    print(f"  Association Precision: {assos_precision:.4f}")
+
+    # Update total average precision to include associations if they exist
+    if expected_associations and output_associations:
+        total_avg_precision = np.mean([class_precision, avg_attr_precision, assos_precision])
+    else:
+        total_avg_precision = np.mean([class_precision, avg_attr_precision])
 
 
+    print(f"\n{'='*60}")
+    print("FINAL METRICS:")
+    print(f"{'='*60}")
+    print(f"Class Precision: {class_precision:.4f}")
+    print(f"Attribute Precision (avg): {avg_attr_precision:.4f}")
+    print(f"Method Precision (avg): {avg_method_precision:.4f}")
+    if expected_associations and output_associations:
+        print(f"Association Precision: {assos_precision:.4f}")
+    print(f"Total Average Precision: {total_avg_precision:.4f}")
 
-    return class_precision, np.mean(attr_precision) if attr_precision else 0, np.mean(method_precision) if method_precision else 0
+    # Write results to CSV
+    print(f"\nWriting results to CSV: {results_file}")
+    with open(results_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        row = [pd.Timestamp.now(), iter_no, class_precision, avg_method_precision, avg_attr_precision, total_avg_precision]
+        print(f"Row to write: {row}")
+        writer.writerow(row)
+    
+    print("CSV write complete!")
+    print("="*60 + "\n")
+
+    return class_precision, avg_attr_precision
 
 
 

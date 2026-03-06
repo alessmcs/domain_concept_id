@@ -123,7 +123,16 @@ def extract_associations(classes_bodies):
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
-def main(umple_code):
+def parse_umple_code(umple_code):
+    """
+    Parse umple code string and return classes and associations.
+    
+    Args:
+        umple_code: String containing umple code
+    
+    Returns:
+        Dict with 'classes' and 'associations'
+    """
     classes = extract_classes(umple_code)
 
     # ── classes & attributes ─────────────────────────────────────────────────
@@ -154,24 +163,52 @@ def main(umple_code):
         "associations": associations_json
     }
 
-    print(result)
+    return result
+
+
+def main(umple_file_or_code):
+    """
+    Parse umple file or code string and return classes and associations.
+    
+    Args:
+        umple_file_or_code: Either a file path to a .ump file, or umple code string
+    
+    Returns:
+        Dict with 'classes' and 'associations'
+    """
+    import os
+    
+    # Check if it's a file path
+    if isinstance(umple_file_or_code, str) and (
+        umple_file_or_code.endswith('.ump') or os.path.isfile(umple_file_or_code)
+    ):
+        print(f"Reading umple file: {umple_file_or_code}")
+        with open(umple_file_or_code, encoding="utf-8") as f:
+            umple_code = f.read()
+        print(f"File read successfully ({len(umple_code)} characters)")
+    else:
+        # Assume it's raw umple code
+        umple_code = umple_file_or_code
+        print(f"Parsing umple code ({len(umple_code)} characters)")
+    
+    result = parse_umple_code(umple_code)
+    
+    print(f"Parsed {len(result['classes'])} classes")
+    for cls_name in result['classes']:
+        print(f"  - {cls_name}: {len(result['classes'][cls_name]['attributes'])} attributes")
 
     return result
 
 
 if __name__ == "__main__":
-    # ── option A: inline string ──────────────────────────────────────────────
-    # paste your model in the triple-quoted string at the top of this file
-    import sys
-    
+    # Test with a file path
     path = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data_mcgill/F20_G3/FlexiBook.ump"
-    with open(path, encoding="utf-8") as f:
-        umple_code = f.read()
-
-    # ── option B: read from file ─────────────────────────────────────────────
-    # import sys
-    # if len(sys.argv) > 1:
-    #     with open(sys.argv[1], encoding="utf-8") as f:
-    #         umple_code = f.read()
-
-    main(umple_code)
+    result = main(path)
+    
+    # Or you can pass raw umple code:
+    # umple_code = """
+    # class Example {
+    #   name;
+    # }
+    # """
+    # result = main(umple_code)

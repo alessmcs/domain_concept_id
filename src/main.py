@@ -1,6 +1,7 @@
 print("Starting imports...")
 
 import os
+import traceback
 import json
 from itertools import combinations
 
@@ -21,12 +22,17 @@ from config import ExLlamaArguments
 print("Loading inference and metrics modules...")
 from inference import LLMClassifier
 import metrics
+import umpParser
+
+from compute_associations import get_bridging_associations
+
+# TODO : add cardinalities to inference and perhaps more restrictions 
 
 print("All imports complete!\n")
 
 def create_json(xml_file, readme_file):
     """
-    Create3 an internal JSON structure to store data throughout the workflow.
+    Create an internal JSON structure to store data throughout the workflow.
     """
     # Step 1: Extract raw class names from the xml file
     print("Extracting class names from xml...")
@@ -118,6 +124,9 @@ def get_class_pairs(all_class_names, all_class_neighbors):
     
     return class_pairs_map
 
+def id_to_name_mapping(json_data):
+    """Create a mapping from class IDs to original class names."""
+    return {v: k for k, v in json_data["class_ids"].items()}
 # -----------------------------------------------------------
 # 2) MAIN WORKFLOW
 #    - Load ExLlama once
@@ -131,6 +140,8 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     """
     Main workflow to process XMI and README files.
     """
+
+    project_name = os.path.basename(os.path.dirname(xml_file))
 
     # Step 1: Create initial JSON structure (with initial class names & ids)
     print("Creating initial JSON structure...")
@@ -198,8 +209,34 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
 
     reclassified_data = inference.classify_classes(json_data = data)
 
+    all_class_names = xmiParser.extract_class_names(xml_file) # all the class names for ALL the classes
+
+    # print('ALL CLASS NAMES:', all_class_names)
+
+    print("CLASS IDS", data["class_ids"])
+
+    all_class_neighbors = {}
+
+    ids = id_to_name_mapping(data)
+    for c in all_class_names:
+        neighbors = xmiParser.extract_class_neighbors(xml_file, c)
+
+        all_class_neighbors[c] = neighbors
+
+        # Map neighbor IDs to their original class names
+        if neighbors:
+            for rel_type in neighbors:
+                neighbors[rel_type] = [ids.get(neighbor_id, neighbor_id) for neighbor_id in neighbors[rel_type]]
+        
+        print(c, neighbors)
+    
+    print("All class neighbors extracted:")
+    for class_name, neighbors in all_class_neighbors.items():
+        print(f"  {class_name}: {neighbors}")
+
+
     xmi_base = os.path.splitext(os.path.basename(xml_file))[0]
-    output_json_file_2 = f"model_outputs/{xmi_base}_classes_result.json"
+    output_json_file_2 = f"../model_outputs/{project_name}_classes_result.json"
 
     with open(output_json_file_2, "w", encoding="utf-8") as f:
         json.dump(reclassified_data, f, indent=4)
@@ -218,6 +255,15 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     print("Mapping tokenized class names to original class names...")
     implementation_details_original_names = map_tokenized_to_original(data, implementation_details)
 
+        # Get all the associations the domain model should have without impl classes, but before inference (so transitive)
+    bridging_associations = get_bridging_associations(all_class_neighbors, implementation_details_original_names)
+
+    print("Bridging associations to add:", bridging_associations)
+
+
+        # pause for debugging before removing impl classes and adding associations
+    # input("Check the bridging associations before continuing...")
+
     # Step 6.3 : Remove implementation detail classes from XML
     print("Removing implementation detail classes from XML...")
     class_xml_path = cleanXML.remove_implementation_classes(xml_file, implementation_details_original_names)
@@ -231,11 +277,11 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # Step 8: Remove irrelevant methods 
 
     # Setup (model_method_results.json, project_output2.json)
-    model_output_file = "model_outputs/model_method_results.json"
+    model_output_file = f"../model_outputs/{project_name}_method_results.json"
     with open(model_output_file, "w", encoding="utf-8") as f:
         pass # clear the file 
 
-    methods_xml_path = class_xml_path.replace("1", "2") # build upon the previous xml file with attributes removed
+    methods_xml_path = class_xml_path.replace("modified_1", "modified_2") # build upon the previous xml file with attributes removed
     with open(class_xml_path, "r", encoding="utf-8") as src, open(methods_xml_path, "w", encoding="utf-8") as dst:
         dst.write(src.read())
 
@@ -264,28 +310,28 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     all_methods = {}
 
     # Time to classify hihi
-    for c in all_class_names: 
-        # Get all the remaining methods of the class 
-        print("Extracting methods for class:", c)
-        methods = xmiParser.extract_class_methods(methods_xml_path, c)
+    # for c in all_class_names: 
+    #     # Get all the remaining methods of the class 
+    print("Extracting methods for class:", c)
+    methods = xmiParser.extract_class_methods(methods_xml_path, c)
 
-        all_methods[c] = methods
+    #     all_methods[c] = methods
 
-        print("Classifying methods for class:", c)
+    #     print("Classifying methods for class:", c)
 
-        # TODO: tokenize method names? 
+    #     # TODO: tokenize method names? 
 
-        # params & return type 
+    #     # params & return type 
         
-        data = inference.classify_methods(c, methods)
+    #     data = inference.classify_methods(c, methods)
 
-        method_classifications[c] = {
-            "classifications": data["classifications"]
-            # "rationales": data.get("rationales", {})
-        }
+    #     method_classifications[c] = {
+    #         "classifications": data["classifications"]
+    #         # "rationales": data.get("rationales", {})
+    #     }
 
-        # now in cleanXML, remove those methods from the diagram & put it in a new file
-        cleanXML.remove_irrelevant_methods(data["classifications"]["Irrelevant"], c, methods_xml_path)
+    #     # now in cleanXML, remove those methods from the diagram & put it in a new file
+    #     cleanXML.remove_irrelevant_methods(data["classifications"]["Irrelevant"], c, methods_xml_path)
 
     # Pause to check if the methods were removed     
     # input("Check file before continuing!!! ...")
@@ -294,10 +340,10 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     with open(model_output_file, "a", encoding="utf-8") as f:
         json.dump(method_classifications, f, indent=4)
 
-    for c in method_classifications.keys():
+    for c in all_class_names:
         metrics_object[c] = {
             "Attributes": [],
-            "Methods" : method_classifications[c]["classifications"]["Relevant"],
+            "Methods" : [],
         }
 
     print(metrics_object) # double check 
@@ -323,18 +369,11 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # For debugging 
     print("id_to_name:", id_to_name)
 
-    all_class_neighbors = {}
-    for c in all_class_names:
-        neighbors = xmiParser.extract_class_neighbors(class_xml_path, c)
-
-        all_class_neighbors[c] = neighbors
-        print(c, neighbors)
-
     # Step 7.3: For each of those classes, classify which of its attributes is relevant or not
     print("Classifying attributes for each class...")
     attr_classification = {}
 
-    attr_xml_path = methods_xml_path.replace("2", "3")
+    attr_xml_path = methods_xml_path.replace("modified_2", "modified_3")
 
     print("attr_xml_path", attr_xml_path)
 
@@ -342,7 +381,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     with open(methods_xml_path, "r", encoding="utf-8") as src, open(attr_xml_path, "w", encoding="utf-8") as dst:
         dst.write(src.read())
 
-    model_output_file = "model_outputs/model_attr_results.json"
+    model_output_file = f"../model_outputs/{project_name}_attr_results.json"
     with open(model_output_file, "w", encoding="utf-8") as f:
         pass # clear the file 
 
@@ -388,86 +427,93 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # Step 9: Add any missing logical associations between classes
     print("Beginning associations between classes...")
 
-    model_output_file = "model_outputs/model_association_results.json"
+    model_output_file = f"../model_outputs/{project_name}_association_results.json"
     with open(model_output_file, "w", encoding="utf-8") as f:
         pass 
 
-    assos_xml_path = attr_xml_path.replace("3", "4") # build upon the previous xml file with attributes removed
+    assos_xml_path = attr_xml_path.replace("modified_3", "modified_4") # build upon the previous xml file with attributes removed
     with open(attr_xml_path, "r", encoding="utf-8") as src, open(assos_xml_path, "w", encoding="utf-8") as dst:
         dst.write(src.read())
 
     print("assos_xml_path", assos_xml_path)
 
     class_pairs_map = get_class_pairs(all_class_names, all_class_neighbors)
-    print("Class pairs map:", class_pairs_map)
+    for c1 in list(class_pairs_map.keys()):
+        class_pairs_map[c1] = [
+            c2 for c2 in class_pairs_map[c1]
+            if tuple(sorted([c1, c2])) not in bridging_associations
+        ]
+        if not class_pairs_map[c1]:
+            del class_pairs_map[c1]
 
-    all_class_attrs = xmiParser.extract_class_attributes(attr_xml_path) # reextract attributes after removing the irrelevant ones
-    
-    associations = {}
+    print("Class pairs map (after excluding bridging pairs):", class_pairs_map)
 
-    # To the model, we want to pass attributes, their types and neighboring classes (clues on associations most of the time) 
-    for c1 in class_pairs_map:
-        possible_neighbors_attrs = {}
-        for c2 in class_pairs_map[c1]:
-            if c2 in all_class_attrs:
-                possible_neighbors_attrs[c2] = all_class_attrs[c2]
-            else:
-                possible_neighbors_attrs[c2] = []
+    # Reextract attributes after removing irrelevant ones
+    all_class_attrs = xmiParser.extract_class_attributes(attr_xml_path)
 
-        print(all_class_attrs[c1])
+    # Only ask the LLM about pairs with no existing association
+    class_pairs_map = get_class_pairs(all_class_names, all_class_neighbors)
+
+    inferred_pairs = set()
+
+    for c1, candidates in class_pairs_map.items():
+        neighbors_attrs = {c2: all_class_attrs.get(c2, []) for c2 in candidates}
 
         data = inference.add_associations(
-            all_methods = methods,
+            all_methods=all_methods,
             curr_class=c1,
-            curr_attrs=all_class_attrs[c1], # (name, type)
-            possible_neighbors=class_pairs_map[c1], # [n1, n2, n3..]
-            neighbors_attrs=possible_neighbors_attrs, #` {n1: [(name, type), ..], n2: [...], ...}
+            curr_attrs=all_class_attrs.get(c1, []),
+            possible_neighbors=candidates,
+            neighbors_attrs=neighbors_attrs,
         )
-        print(c1, data["associations"])
 
-        associations[c] = {
-            "associations": data["associations"]
-            # "rationales": data.get("rationales", {})
-        }
+        for c2_name, association_type in data["associations"]:
+            inferred_pairs.add(tuple(sorted([c1, c2_name])))
+    
+    # Merge bridged + inferred associations (both are sets of sorted tuples)
+    all_associations = bridging_associations | inferred_pairs
 
-        # (tracing/debug) write the output to a file bc it may truncate in the terminal
-        with open(model_output_file, "a", encoding="utf-8") as f:
-            json.dump(associations, f, indent=4)
-
-        future_associations = [c[0] for c in data["associations"]]
-
-        # Add the container to 
-        for c2_name in future_associations:
-           print(c1, c2_name)
-           c1_id = json_data["class_ids"][c1]
-           c2_id = json_data["class_ids"][c2_name]
-            
-           # Now edit the xml file AGAIN 😍 by adding the associations
-           cleanXML.add_association_to_xml(assos_xml_path, c1_id, c1, c2_id, c2_name)
-
-    # Add EVERY association in the final XML to the metrics object 
     final_metrics_object = {
         "classes": metrics_object,
-        "associations": []
+        "associations": [list(pair) for pair in sorted(all_associations)],
     }
 
-    # By extracting all the current associations from the XML 
-    curr_assos = []
+    # Collect all associations (pre-existing + newly added) for metrics
+    # final_metrics_object = {"classes": metrics_object, "associations": []}
+    # seen_pairs = set()
 
-    for c in all_class_names:
-        neighbors = xmiParser.extract_class_neighbors(assos_xml_path, c)
-        if "Association" in neighbors:
-            for assoc in neighbors["Association"]:
-                pair = tuple(sorted([c, id_to_name[assoc]]))
-                if pair not in curr_assos:
-                    curr_assos.append(pair) # TODO: review this 
-                    final_metrics_object["associations"].append(list(pair))
+    # for c in all_class_names:
+    #     for assoc in xmiParser.extract_class_neighbors(assos_xml_path, c).get("Association", []):
+    #         pair = tuple(sorted([c, id_to_name[assoc]]))
+    #         if pair not in seen_pairs:
+    #             seen_pairs.add(pair)
+    #             final_metrics_object["associations"].append(list(pair))
+
+    # Add EVERY association in the final XML to the metrics object 
+    # final_metrics_object = {
+    #     "classes": metrics_object,
+    #     "associations": []
+    # }
+
+    # # By extracting all the current associations from the XML 
+    # curr_assos = []
+
+    # for c in all_class_names:
+    #     neighbors = xmiParser.extract_class_neighbors(assos_xml_path, c)
+    #     if "Association" in neighbors:
+    #         for assoc in neighbors["Association"]:
+    #             pair = tuple(sorted([c, id_to_name[assoc]]))
+    #             if pair not in curr_assos:
+    #                 curr_assos.append(pair) # TODO: review this 
+    #                 final_metrics_object["associations"].append(list(pair))
 
     # Time to validate!! 
 
     print("Final metrics object: ", final_metrics_object)
 
-    if labels_file.endswith(".json"):
+    if labels_file is None:
+        print("WARNING: No labels file found - skipping metrics comparison")
+    elif labels_file.endswith(".json"):
         with open(labels_file, "r", encoding="utf-8") as f:
             labels_dict = json.load(f)
             metrics.compare(
@@ -477,49 +523,69 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
                 iter_no=iteration
             )   
     elif labels_file.endswith(".ump"):
+        print(f"Running metrics comparison with .ump file: {labels_file}")
         metrics.compare_ump(
-            labels_file=labels_file,
+            gt=umpParser.main(labels_file), # ground truth in json format 
             output=final_metrics_object,
             results_file=results_file, 
             iter_no=iteration
         )
+    else:
+        print(f"WARNING: Unknown labels file format: {labels_file}")
 
     # TODO: include Associations!?
 
-def run_all_projects(model_args):
-    base_dir = "data_mcgill"
+def run_all_projects(model_args, max_projects=None, iterations=0):
+    base_dir = "../data_mcgill"
+    projects = sorted(os.listdir(base_dir))
 
-    for project in sorted(os.listdir(base_dir)):
-        project_path = os.path.join(base_dir, project)
+    # Optionally limit how many projects to run
+    if max_projects is not None:
+        projects = projects[:max_projects+1]
 
-        if not os.path.isdir(project_path):
-            continue
+    if iterations > 0:
+        for i in range(iterations):
+            print(f"\nRunning iteration {i+1} of {iterations} for all projects...")
 
-        print("\n===================================")
-        print(f"Running project: {project}")
-        print("===================================\n")
+            for project in projects:
+                project_path = os.path.join(base_dir, project)
 
-        xml_file = os.path.join(project_path, "project.xml")
-        readme_file = os.path.join(project_path, "readme.md")
+                if not os.path.isdir(project_path):
+                    continue
 
-        # optional files
-        labels_file = os.path.join(project_path, "labels.json")
-        results_file = os.path.join(project_path, "results.json")
+                print("\n===================================")
+                print(f"Running project: {project}")
+                print("===================================\n")
 
-        if not os.path.exists(xml_file):
-            print(f"Skipping {project} (no project.xml)")
-            continue
+                xml_file = os.path.join(project_path, "project.xml")
+                readme_file = os.path.join(project_path, "readme.md")
 
-        try:
-            main(
-                xml_file=xml_file,
-                readme_file=readme_file,
-                model_args=model_args,
-                labels_file=labels_file,
-                results_file=results_file
-            )
-        except Exception as e:
-            print(f"Error running {project}: {e}")
+                # optional files
+                labels_file = next((os.path.join(project_path, f) for f in os.listdir(project_path) if f.endswith(".ump")), None)
+                results_file = os.path.join(project_path, "results.csv")
+                # CSV file will be created by metrics.py with headers when first written to
+
+                if labels_file:
+                    print(f"Found labels file: {labels_file}")
+                else:
+                    print(f"WARNING: No .ump labels file found for {project}")
+
+                if not os.path.exists(xml_file):
+                    print(f"Skipping {project} (no project.xml)")
+                    continue
+
+                try:
+                    main(
+                        xml_file=xml_file,
+                        readme_file=readme_file,
+                        model_args=model_args,
+                        labels_file=labels_file,
+                        results_file=results_file,
+                        iteration=0
+                    )
+                except Exception as e:
+                    print(f"Error running {project}: {e}")
+                    traceback.print_exc()
     
 
 def fetch_sources() :
@@ -537,7 +603,7 @@ def fetch_sources() :
 if __name__ == "__main__":
 
     ## MAIN FLOW 
-    print("Fetching sources...")
+    # print("Fetching sources...")
     # xml_file, readme_file, csv_file, labels_file= fetch_sources()
 
     # Parse ExLlamaArguments using HF parser 
@@ -551,7 +617,56 @@ if __name__ == "__main__":
     #     main(xml_file, readme_file, model_args, labels_file, csv_file, i)
 
 
-    run_all_projects(model_args)
+    run_all_projects(model_args, 6, 2)
+
+    # testing just the comparison 
+
+    # final_metrics_object = {'classes': {'FlexiBookApplication': {'Attributes': ['currentUser'], 'Methods': []}, 'TOCustomer': {'Attributes': ['name', 'noShow'], 'Methods': []}, 'TOTimeSlot': {'Attributes': ['startDate', 'startTime', 'endDate', 'endTime'], 'Methods': []}, 'TOComboItem': {'Attributes': ['isMandatory', 'serviceName', 'tOServiceCombo'], 'Methods': []}, 'TOService': {'Attributes': ['name', 'duration', 'downtimeDuration', 'downtimeStart'], 'Methods': []}, 'TOServiceCombo': {'Attributes': ['name', 'mainService', 'opServices', 'mandatoryServices'], 'Methods': []}, 'TOBusinessHour': {'Attributes': ['TODayOfWeek', 'startTime', 'endTime'], 'Methods': []}, 'TOAppointment': {'Attributes': ['customerName', 'serviceName', 'date', 'startTime', 'endTime'], 'Methods': []}, 'TOBusiness': {'Attributes': ['name', 'adress', 'phoneNumber', 'email'], 'Methods': []}, 'TOAppointmentCalender': {'Attributes': ['nameOfTheCustomer', 'serviceName', 'timeSlot'], 'Methods': []}, 'ServiceCombo': {'Attributes': ['mainService', 'services'], 'Methods': []}, 'BusinessHour': {'Attributes': ['dayOfWeek', 'startTime', 'endTime'], 'Methods': []}, 'DayOfWeek': {'Attributes': [], 'Methods': []}, 'TimeSlot': {'Attributes': ['startDate', 'startTime', 'endDate', 'endTime'], 'Methods': []}, 'Customer': {'Attributes': ['appointments', 'noShow'], 'Methods': []}, 'Appointment': {'Attributes': ['appointmentStatus', 'customer', 'bookableService', 'chosenItems', 'timeSlot'], 'Methods': []}, 'AppointmentStatus': {'Attributes': [], 'Methods': []}, 'User': {'Attributes': ['usersByUsername', 'username', 'password'], 'Methods': []}, 'Service': {'Attributes': ['duration', 'downtimeDuration', 'downtimeStart'], 'Methods': []}, 'Owner': {'Attributes': [], 'Methods': []}, 'Business': {'Attributes': ['name', 'address', 'phoneNumber', 'email', 'businessHours', 'holidays', 'vacation'], 'Methods': []}, 'ComboItem': {'Attributes': ['mandatory', 'service', 'serviceCombo'], 'Methods': []}, 'BookableService': {'Attributes': ['bookableservicesByName', 'name', 'appointments'], 'Methods': []}, 'FlexiBook': {'Attributes': ['business', 'owner', 'customers', 'hours', 'appointments', 'timeSlots', 'bookableServices'], 'Methods': []}, 'TOAppointmentCalendarItem': {'Attributes': ['date', 'availableTimeSlots', 'unavailableTimeSlots', 'tOAppointments'], 'Methods': []}}, 'associations': [['Appointment', 'AppointmentStatus'], ['Appointment', 'BookableService'], ['Appointment', 'BusinessHour'], ['Appointment', 'ComboItem'], ['Appointment', 'Customer'], ['Appointment', 'FlexiBook'], ['Appointment', 'FlexiBookApplication'], ['Appointment', 'Service'], ['Appointment', 'ServiceCombo'], ['Appointment', 'TOAppointment'], ['Appointment', 'TOAppointmentCalendarItem'], ['Appointment', 'TOAppointmentCalender'], ['Appointment', 'TOBusiness'], ['Appointment', 'TOBusinessHour'], ['Appointment', 'TOComboItem'], ['Appointment', 'TOCustomer'], ['Appointment', 'TOService'], ['Appointment', 'TOServiceCombo'], ['Appointment', 'TOTimeSlot'], ['Appointment', 'TimeSlot'], ['Appointment', 'User'], ['AppointmentStatus', 'BookableService'], ['AppointmentStatus', 'FlexiBook'], ['AppointmentStatus', 'TOAppointmentCalendarItem'], ['BookableService', 'Business'], ['BookableService', 'ComboItem'], ['BookableService', 'Customer'], ['BookableService', 'FlexiBook'], ['BookableService', 'FlexiBookApplication'], ['BookableService', 'Owner'], ['BookableService', 'Service'], ['BookableService', 'ServiceCombo'], ['BookableService', 'TOAppointment'], ['BookableService', 'TOAppointmentCalendarItem'], ['BookableService', 'TOAppointmentCalender'], ['BookableService', 'TOBusiness'], ['BookableService', 'TOComboItem'], ['BookableService', 'TOService'], ['BookableService', 'TOServiceCombo'], ['BookableService', 'TOTimeSlot'], ['BookableService', 'TimeSlot'], ['Business', 'BusinessHour'], ['Business', 'FlexiBook'], ['Business', 'FlexiBookApplication'], ['Business', 'Owner'], ['Business', 'Service'], ['Business', 'TOAppointmentCalendarItem'], ['Business', 'TOBusiness'], ['Business', 'TOBusinessHour'], ['BusinessHour', 'DayOfWeek'], ['BusinessHour', 'FlexiBook'], ['BusinessHour', 'Owner'], ['BusinessHour', 'TOAppointmentCalendarItem'], ['BusinessHour', 'TOBusiness'], ['BusinessHour', 'TOBusinessHour'], ['BusinessHour', 'TOTimeSlot'], ['BusinessHour', 'TimeSlot'], ['ComboItem', 'Service'], ['ComboItem', 'ServiceCombo'], ['ComboItem', 'TOComboItem'], ['ComboItem', 'TOService'], ['ComboItem', 'TOServiceCombo'], ['Customer', 'FlexiBook'], ['Customer', 'FlexiBookApplication'], ['Customer', 'Service'], ['Customer', 'TOAppointment'], ['Customer', 'TOAppointmentCalendarItem'], ['Customer', 'TOAppointmentCalender'], ['Customer', 'TOBusiness'], ['Customer', 'TOCustomer'], ['Customer', 'User'], ['DayOfWeek', 'TOAppointmentCalendarItem'], ['DayOfWeek', 'TOBusinessHour'], ['DayOfWeek', 'TimeSlot'], ['FlexiBook', 'FlexiBookApplication'], ['FlexiBook', 'Owner'], ['FlexiBook', 'Service'], ['FlexiBook', 'TOAppointment'], ['FlexiBook', 'TOAppointmentCalendarItem'], ['FlexiBook', 'TOAppointmentCalender'], ['FlexiBook', 'TOBusiness'], ['FlexiBook', 'TOBusinessHour'], ['FlexiBook', 'TOCustomer'], ['FlexiBook', 'TOTimeSlot'], ['FlexiBook', 'TimeSlot'], ['FlexiBook', 'User'], ['FlexiBookApplication', 'Owner'], ['FlexiBookApplication', 'ServiceCombo'], ['FlexiBookApplication', 'TOAppointment'], ['FlexiBookApplication', 'TOAppointmentCalendarItem'], ['FlexiBookApplication', 'TOAppointmentCalender'], ['FlexiBookApplication', 'TOBusiness'], ['FlexiBookApplication', 'TOCustomer'], ['FlexiBookApplication', 'User'], ['Owner', 'Service'], ['Owner', 'ServiceCombo'], ['Owner', 'TOBusiness'], ['Owner', 'TOBusinessHour'], ['Owner', 'TOServiceCombo'], ['Owner', 'User'], ['Service', 'ServiceCombo'], ['Service', 'TOAppointment'], ['Service', 'TOAppointmentCalendarItem'], ['Service', 'TOAppointmentCalender'], ['Service', 'TOBusiness'], ['Service', 'TOComboItem'], ['Service', 'TOService'], ['Service', 'TOServiceCombo'], ['Service', 'TOTimeSlot'], ['Service', 'TimeSlot'], ['ServiceCombo', 'TOAppointment'], ['ServiceCombo', 'TOAppointmentCalender'], ['ServiceCombo', 'TOBusiness'], ['ServiceCombo', 'TOComboItem'], ['ServiceCombo', 'TOService'], ['ServiceCombo', 'TOServiceCombo'], ['ServiceCombo', 'TOTimeSlot'], ['ServiceCombo', 'TimeSlot'], ['TOAppointment', 'TOAppointmentCalendarItem'], ['TOAppointment', 'TOAppointmentCalender'], ['TOAppointment', 'TOBusinessHour'], ['TOAppointment', 'TOComboItem'], ['TOAppointment', 'TOCustomer'], ['TOAppointment', 'TOService'], ['TOAppointment', 'TOServiceCombo'], ['TOAppointment', 'TOTimeSlot'], ['TOAppointment', 'TimeSlot'], ['TOAppointment', 'User'], ['TOAppointmentCalendarItem', 'TOAppointmentCalender'], ['TOAppointmentCalendarItem', 'TOBusiness'], ['TOAppointmentCalendarItem', 'TOBusinessHour'], ['TOAppointmentCalendarItem', 'TOCustomer'], ['TOAppointmentCalendarItem', 'TOService'], ['TOAppointmentCalendarItem', 'TOServiceCombo'], ['TOAppointmentCalendarItem', 'TOTimeSlot'], ['TOAppointmentCalendarItem', 'TimeSlot'], ['TOAppointmentCalender', 'TOBusiness'], ['TOAppointmentCalender', 'TOBusinessHour'], ['TOAppointmentCalender', 'TOComboItem'], ['TOAppointmentCalender', 'TOCustomer'], ['TOAppointmentCalender', 'TOService'], ['TOAppointmentCalender', 'TOServiceCombo'], ['TOAppointmentCalender', 'TOTimeSlot'], ['TOAppointmentCalender', 'TimeSlot'], ['TOBusiness', 'TOBusinessHour'], ['TOBusiness', 'TimeSlot'], ['TOBusinessHour', 'TOTimeSlot'], ['TOBusinessHour', 'TimeSlot'], ['TOComboItem', 'TOComboItem'], ['TOComboItem', 'TOService'], ['TOComboItem', 'TOServiceCombo'], ['TOCustomer', 'TOService'], ['TOService', 'TOServiceCombo'], ['TOService', 'TimeSlot'], ['TOServiceCombo', 'TimeSlot'], ['TOTimeSlot', 'TimeSlot']]}
+    # max_projects = 1
+
+    # base_dir = "../data_mcgill"
+    # projects = sorted(os.listdir(base_dir))
+
+    # # Optionally limit how many projects to run
+    # if max_projects is not None:
+    #     projects = projects[:max_projects+1]
+
+    # for project in projects:
+    #     project_path = os.path.join(base_dir, project)
+
+    #     if not os.path.isdir(project_path):
+    #         continue
+
+    #     print("\n===================================")
+    #     print(f"Running project: {project}")
+    #     print("===================================\n")
+
+    #     xml_file = os.path.join(project_path, "project.xml")
+    #     readme_file = os.path.join(project_path, "readme.md")
+
+    #     # optional files
+    #     labels_file = next((os.path.join(project_path, f) for f in os.listdir(project_path) if f.endswith(".ump")), None)
+    #     results_file = os.path.join(project_path, "results.csv")
+    #     # CSV file will be created by metrics.py with headers when first written to
+
+    #     if not os.path.exists(xml_file):
+    #         print(f"Skipping {project} (no project.xml)")
+    #         continue
+
+    #     try:
+    #         metrics.compare_ump(
+    #             gt=umpParser.main(labels_file), # ground truth in json format 
+    #             output=final_metrics_object,
+    #             results_file=results_file, 
+    #             iter_no=0
+    #         )
+    #     except Exception as e:
+    #         print(f"Error running {project}: {e}")
+    #         traceback.print_exc()
+
+
+
+
 
     ## TO TEST RELEVANT ATTRIBUTES 
     # output_xml_path = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/project_modified.xml"

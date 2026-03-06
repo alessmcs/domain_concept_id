@@ -203,8 +203,8 @@ def extract_class_neighbors(xml_file, curr_class_name):
                     continue
 
                 from_id = from_qualifier.get("EndModelElement")
-                print(class_id)
-                print(from_id)
+                #print(class_id)
+                #print(from_id)
                 if from_id != class_id:
                     continue
 

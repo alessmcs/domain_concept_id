@@ -72,7 +72,7 @@ def attribute_prompt(curr_attr, curr_attr_type, readme, neighboring_classes, rel
         ) if neighboring_classes else 'None'
     )
 
-    print(neighbor_str)
+    #print(neighbor_str)
 
     def format_attrs(attrs):
         return ', '.join([f"{name} ({type_})" for name, type_ in attrs]) if attrs else 'None'
@@ -111,8 +111,8 @@ def attribute_prompt(curr_attr, curr_attr_type, readme, neighboring_classes, rel
 
     """
 
-    if(neighbor_str != 'None'):
-        print(attribute_classification_template)
+    # if(neighbor_str != 'None'):
+    #     print(attribute_classification_template)
 
     return attribute_classification_template
 

@@ -687,15 +687,13 @@ class LLMClassifier:
         base_gen_settings = self.base_gen_settings
 
         with get_basic_progress() as progress:
-            # The 'total' is how many classes we're going to classify.
-
             task_id = progress.add_task(
-                "[green]Enqueuing neighbors...",
+                "[green]Processing neighbors...",
                 total=len(possible_neighbors),
-                name="Queue adding Progress"
+                name="Association Progress"
             )
-        
-            # Classify each class name in a sequential loop
+
+            # Enqueue ALL neighbors at once so the generator can batch them
             for i, neighbor in enumerate(possible_neighbors):
                 user_prompt = association_prompt(
                     c1_class=curr_class,
@@ -708,64 +706,47 @@ class LLMClassifier:
                     curr_associations=associations,
                 )
 
-                # Combine system + user to create final prompt
                 input_prompt = llama_template.format(
                     system_prompt=method_classification_system_prompt,
                     user_prompt=user_prompt
                 )
-                
-                # Encode the prompt
+
                 input_ids = tokenizer.encode(
                     input_prompt,
                     encode_special_tokens=True,
                     add_bos=False
-                )        
+                )
 
-                # generator.clear_queue()
-
-                # Ensure it doesnt exceed max length
                 if len(input_ids) > model_args.max_seq_len:
-                    print(f"Warning: Input prompt for '{neighbor}' exceeds max length ({len(input_ids)} > {model_args.max_seq_len})")
+                    print(f"Warning: prompt for '{neighbor}' exceeds max length, truncating.")
                     input_ids = input_ids[:model_args.max_seq_len]
 
-                # Create a new job
-                job = ExLlamaV2DynamicJob(
+                generator.enqueue(ExLlamaV2DynamicJob(
                     input_ids=input_ids,
                     gen_settings=base_gen_settings,
                     max_new_tokens=model_args.max_new_tokens,
                     stop_conditions=[tokenizer.single_id("<|eot_id|>")],
                     token_healing=True,
-                    identifier=i,  # Unique identifier for this job
-                )
+                    identifier=i,
+                ))
 
-                generator.enqueue(job)  # Enqueue the job
+            # Drain all jobs — generator processes them in parallel across the batch
+            while generator.num_remaining_jobs():
+                for result in generator.iterate():
+                    if not result["eos"]:
+                        continue
 
-                # Wait for generation to complete
-                while generator.num_remaining_jobs():
-                    results = generator.iterate()
-                    for result in results:
-                        if not result["eos"]:
-                            continue  # Not done generating for this job
+                    neighbor = possible_neighbors[result["identifier"]]
+                    response = result["full_completion"]
+                    should_associate, association_type = self.extract_association_classification(response)
 
-                        response = result["full_completion"]
-                        # added print below for debugging
-                        # print(f"Prompt:\n{input_prompt}\n\n ###======================== this is the response ===================###\n Response:\n{response}\n ###==================== end of response =============### ")
-                        should_associate, association_type = self.extract_association_classification(response)
-                        if should_associate is not None and association_type is not None:
-                            if should_associate:
-                                associations.append((neighbor, association_type))
-                                print(f"Classified association between '{curr_class}' and '{neighbor}' as {association_type}.")
-                            else:
-                                print(f"Classified association between '{curr_class}' and '{neighbor}' as Not Associated.")
-                        else:
-                            print(f"'{curr_class}' and '{neighbor}' are not associated. Raw Response: {response}")
+                    if should_associate:
+                        associations.append((neighbor, association_type))
+                        print(f"  '{curr_class}' -- '{neighbor}': {association_type}")
+                    else:
+                        print(f"  '{curr_class}' -- '{neighbor}': not associated")
 
-                # 3) After finishing classification for this attribute, update progress
-                # return_data["rationales"][neighbor] = rationale
-
-                # 3) After finishing classification for this attribute, update progress
-                # return_data["rationales"][neighbor] = rationale
-                progress.update(task_id, advance=1)
+                    progress.update(task_id, advance=1)
     
         # return_data["rationale"] = rationales
         generator.clear_queue()
