@@ -1,0 +1,705 @@
+{
+    "classes": {
+        "FlexiBookApplication": {
+            "Attributes": [
+                "currentUser"
+            ],
+            "Methods": []
+        },
+        "ServiceCombo": {
+            "Attributes": [
+                "mainService",
+                "services"
+            ],
+            "Methods": []
+        },
+        "BusinessHour": {
+            "Attributes": [
+                "dayOfWeek",
+                "startTime",
+                "endTime"
+            ],
+            "Methods": []
+        },
+        "DayOfWeek": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "TimeSlot": {
+            "Attributes": [
+                "startDate",
+                "startTime",
+                "endDate",
+                "endTime"
+            ],
+            "Methods": []
+        },
+        "Customer": {
+            "Attributes": [
+                "appointments",
+                "noShow"
+            ],
+            "Methods": []
+        },
+        "Appointment": {
+            "Attributes": [
+                "appointmentStatus",
+                "customer",
+                "bookableService",
+                "chosenItems",
+                "timeSlot"
+            ],
+            "Methods": []
+        },
+        "AppointmentStatus": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "User": {
+            "Attributes": [
+                "usersByUsername",
+                "username",
+                "password"
+            ],
+            "Methods": []
+        },
+        "Service": {
+            "Attributes": [
+                "duration",
+                "downtimeDuration",
+                "downtimeStart"
+            ],
+            "Methods": []
+        },
+        "Owner": {
+            "Attributes": [
+                "flexiBook"
+            ],
+            "Methods": []
+        },
+        "Business": {
+            "Attributes": [
+                "name",
+                "address",
+                "phoneNumber",
+                "email",
+                "businessHours",
+                "holidays",
+                "vacation"
+            ],
+            "Methods": []
+        },
+        "ComboItem": {
+            "Attributes": [
+                "mandatory",
+                "service",
+                "serviceCombo"
+            ],
+            "Methods": []
+        },
+        "BookableService": {
+            "Attributes": [
+                "bookableservicesByName",
+                "name",
+                "appointments"
+            ],
+            "Methods": []
+        },
+        "FlexiBook": {
+            "Attributes": [
+                "business",
+                "owner",
+                "customers",
+                "hours",
+                "appointments",
+                "timeSlots",
+                "bookableServices"
+            ],
+            "Methods": []
+        },
+        "TOCustomer": {
+            "Attributes": [
+                "name",
+                "noShow"
+            ],
+            "Methods": []
+        },
+        "TOTimeSlot": {
+            "Attributes": [
+                "startDate",
+                "startTime",
+                "endDate",
+                "endTime"
+            ],
+            "Methods": []
+        },
+        "TOService": {
+            "Attributes": [
+                "name",
+                "duration",
+                "downtimeDuration",
+                "downtimeStart"
+            ],
+            "Methods": []
+        },
+        "TOServiceCombo": {
+            "Attributes": [
+                "name",
+                "mainService",
+                "opServices",
+                "mandatoryServices"
+            ],
+            "Methods": []
+        },
+        "TOBusinessHour": {
+            "Attributes": [
+                "TODayOfWeek",
+                "startTime",
+                "endTime"
+            ],
+            "Methods": []
+        },
+        "TODayOfWeek": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "TOAppointment": {
+            "Attributes": [
+                "customerName",
+                "serviceName",
+                "date",
+                "startTime",
+                "endTime"
+            ],
+            "Methods": []
+        },
+        "TOAppointmentCalendarItem": {
+            "Attributes": [
+                "date",
+                "availableTimeSlots",
+                "unavailableTimeSlots",
+                "tOAppointments"
+            ],
+            "Methods": []
+        },
+        "TOBusiness": {
+            "Attributes": [
+                "name",
+                "address",
+                "phoneNumber",
+                "email"
+            ],
+            "Methods": []
+        }
+    },
+    "associations": [
+        [
+            "Appointment",
+            "AppointmentStatus"
+        ],
+        [
+            "Appointment",
+            "BookableService"
+        ],
+        [
+            "Appointment",
+            "BusinessHour"
+        ],
+        [
+            "Appointment",
+            "ComboItem"
+        ],
+        [
+            "Appointment",
+            "Customer"
+        ],
+        [
+            "Appointment",
+            "FlexiBook"
+        ],
+        [
+            "Appointment",
+            "FlexiBookApplication"
+        ],
+        [
+            "Appointment",
+            "Owner"
+        ],
+        [
+            "Appointment",
+            "Service"
+        ],
+        [
+            "Appointment",
+            "ServiceCombo"
+        ],
+        [
+            "Appointment",
+            "TOAppointment"
+        ],
+        [
+            "Appointment",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "Appointment",
+            "TOCustomer"
+        ],
+        [
+            "Appointment",
+            "TOService"
+        ],
+        [
+            "Appointment",
+            "TOServiceCombo"
+        ],
+        [
+            "Appointment",
+            "TOTimeSlot"
+        ],
+        [
+            "Appointment",
+            "TimeSlot"
+        ],
+        [
+            "Appointment",
+            "User"
+        ],
+        [
+            "AppointmentStatus",
+            "BookableService"
+        ],
+        [
+            "AppointmentStatus",
+            "FlexiBook"
+        ],
+        [
+            "AppointmentStatus",
+            "TOAppointment"
+        ],
+        [
+            "AppointmentStatus",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "BookableService",
+            "Business"
+        ],
+        [
+            "BookableService",
+            "ComboItem"
+        ],
+        [
+            "BookableService",
+            "Customer"
+        ],
+        [
+            "BookableService",
+            "FlexiBook"
+        ],
+        [
+            "BookableService",
+            "FlexiBookApplication"
+        ],
+        [
+            "BookableService",
+            "Owner"
+        ],
+        [
+            "BookableService",
+            "Service"
+        ],
+        [
+            "BookableService",
+            "ServiceCombo"
+        ],
+        [
+            "BookableService",
+            "TOAppointment"
+        ],
+        [
+            "BookableService",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "BookableService",
+            "TOService"
+        ],
+        [
+            "BookableService",
+            "TOServiceCombo"
+        ],
+        [
+            "BookableService",
+            "TOTimeSlot"
+        ],
+        [
+            "BookableService",
+            "TimeSlot"
+        ],
+        [
+            "Business",
+            "BusinessHour"
+        ],
+        [
+            "Business",
+            "FlexiBook"
+        ],
+        [
+            "Business",
+            "FlexiBookApplication"
+        ],
+        [
+            "Business",
+            "Owner"
+        ],
+        [
+            "Business",
+            "Service"
+        ],
+        [
+            "Business",
+            "TOAppointment"
+        ],
+        [
+            "Business",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "Business",
+            "TOBusinessHour"
+        ],
+        [
+            "Business",
+            "TOService"
+        ],
+        [
+            "Business",
+            "TOServiceCombo"
+        ],
+        [
+            "Business",
+            "TOTimeSlot"
+        ],
+        [
+            "BusinessHour",
+            "DayOfWeek"
+        ],
+        [
+            "BusinessHour",
+            "FlexiBook"
+        ],
+        [
+            "BusinessHour",
+            "Owner"
+        ],
+        [
+            "BusinessHour",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "BusinessHour",
+            "TOBusiness"
+        ],
+        [
+            "BusinessHour",
+            "TODayOfWeek"
+        ],
+        [
+            "BusinessHour",
+            "TOTimeSlot"
+        ],
+        [
+            "BusinessHour",
+            "TimeSlot"
+        ],
+        [
+            "ComboItem",
+            "Service"
+        ],
+        [
+            "ComboItem",
+            "ServiceCombo"
+        ],
+        [
+            "ComboItem",
+            "TOService"
+        ],
+        [
+            "ComboItem",
+            "TOServiceCombo"
+        ],
+        [
+            "Customer",
+            "FlexiBook"
+        ],
+        [
+            "Customer",
+            "FlexiBookApplication"
+        ],
+        [
+            "Customer",
+            "Service"
+        ],
+        [
+            "Customer",
+            "TOAppointment"
+        ],
+        [
+            "Customer",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "Customer",
+            "TOCustomer"
+        ],
+        [
+            "Customer",
+            "TOTimeSlot"
+        ],
+        [
+            "Customer",
+            "User"
+        ],
+        [
+            "DayOfWeek",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "DayOfWeek",
+            "TOBusinessHour"
+        ],
+        [
+            "DayOfWeek",
+            "TimeSlot"
+        ],
+        [
+            "FlexiBook",
+            "FlexiBookApplication"
+        ],
+        [
+            "FlexiBook",
+            "Owner"
+        ],
+        [
+            "FlexiBook",
+            "Service"
+        ],
+        [
+            "FlexiBook",
+            "TOAppointment"
+        ],
+        [
+            "FlexiBook",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "FlexiBook",
+            "TOBusiness"
+        ],
+        [
+            "FlexiBook",
+            "TOBusinessHour"
+        ],
+        [
+            "FlexiBook",
+            "TOCustomer"
+        ],
+        [
+            "FlexiBook",
+            "TOService"
+        ],
+        [
+            "FlexiBook",
+            "TOServiceCombo"
+        ],
+        [
+            "FlexiBook",
+            "TOTimeSlot"
+        ],
+        [
+            "FlexiBook",
+            "TimeSlot"
+        ],
+        [
+            "FlexiBook",
+            "User"
+        ],
+        [
+            "FlexiBookApplication",
+            "Owner"
+        ],
+        [
+            "FlexiBookApplication",
+            "ServiceCombo"
+        ],
+        [
+            "FlexiBookApplication",
+            "TOAppointment"
+        ],
+        [
+            "FlexiBookApplication",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "FlexiBookApplication",
+            "TOBusiness"
+        ],
+        [
+            "FlexiBookApplication",
+            "TOCustomer"
+        ],
+        [
+            "FlexiBookApplication",
+            "User"
+        ],
+        [
+            "Owner",
+            "Service"
+        ],
+        [
+            "Owner",
+            "TOBusiness"
+        ],
+        [
+            "Owner",
+            "User"
+        ],
+        [
+            "Service",
+            "ServiceCombo"
+        ],
+        [
+            "Service",
+            "TOAppointment"
+        ],
+        [
+            "Service",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "Service",
+            "TOService"
+        ],
+        [
+            "Service",
+            "TOServiceCombo"
+        ],
+        [
+            "Service",
+            "TOTimeSlot"
+        ],
+        [
+            "Service",
+            "TimeSlot"
+        ],
+        [
+            "ServiceCombo",
+            "TOAppointment"
+        ],
+        [
+            "ServiceCombo",
+            "TOService"
+        ],
+        [
+            "ServiceCombo",
+            "TOServiceCombo"
+        ],
+        [
+            "ServiceCombo",
+            "TimeSlot"
+        ],
+        [
+            "TOAppointment",
+            "TOAppointmentCalendarItem"
+        ],
+        [
+            "TOAppointment",
+            "TOBusinessHour"
+        ],
+        [
+            "TOAppointment",
+            "TOCustomer"
+        ],
+        [
+            "TOAppointment",
+            "TOService"
+        ],
+        [
+            "TOAppointment",
+            "TOServiceCombo"
+        ],
+        [
+            "TOAppointment",
+            "TOTimeSlot"
+        ],
+        [
+            "TOAppointment",
+            "TimeSlot"
+        ],
+        [
+            "TOAppointment",
+            "User"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TOBusinessHour"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TOCustomer"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TODayOfWeek"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TOService"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TOServiceCombo"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TOTimeSlot"
+        ],
+        [
+            "TOAppointmentCalendarItem",
+            "TimeSlot"
+        ],
+        [
+            "TOBusiness",
+            "TOBusinessHour"
+        ],
+        [
+            "TOBusinessHour",
+            "TODayOfWeek"
+        ],
+        [
+            "TOBusinessHour",
+            "TOTimeSlot"
+        ],
+        [
+            "TOBusinessHour",
+            "TimeSlot"
+        ],
+        [
+            "TOCustomer",
+            "TOService"
+        ],
+        [
+            "TOService",
+            "TOServiceCombo"
+        ],
+        [
+            "TOService",
+            "TOTimeSlot"
+        ],
+        [
+            "TOTimeSlot",
+            "TimeSlot"
+        ]
+    ]
+}

@@ -1,0 +1,196 @@
+{
+    "classes": {
+        "FlexiBook": {
+            "extends": null,
+            "attributes": []
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "username",
+                "password"
+            ]
+        },
+        "Owner": {
+            "extends": "User",
+            "attributes": []
+        },
+        "Customer": {
+            "extends": "User",
+            "attributes": [
+                "noShow : int"
+            ]
+        },
+        "Business": {
+            "extends": null,
+            "attributes": [
+                "name",
+                "address",
+                "phoneNumber",
+                "email"
+            ]
+        },
+        "BusinessHour": {
+            "extends": null,
+            "attributes": [
+                "startTime : Time",
+                "endTime : Time"
+            ]
+        },
+        "TimeSlot": {
+            "extends": null,
+            "attributes": [
+                "startDate : Date",
+                "startTime : Time",
+                "endDate : Date",
+                "endTime : Time"
+            ]
+        },
+        "BookableService": {
+            "extends": null,
+            "attributes": [
+                "name"
+            ]
+        },
+        "Service": {
+            "extends": "BookableService",
+            "attributes": [
+                "duration : int",
+                "downtimeDuration : int",
+                "downtimeStart : int"
+            ]
+        },
+        "ServiceCombo": {
+            "extends": "BookableService",
+            "attributes": []
+        },
+        "ComboItem": {
+            "extends": null,
+            "attributes": [
+                "mandatory : Boolean"
+            ]
+        },
+        "Appointment": {
+            "extends": null,
+            "attributes": []
+        },
+        "SystemTime": {
+            "extends": null,
+            "attributes": []
+        }
+    },
+    "associations": {
+        "FlexiBook": [
+            {
+                "to": "Business",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Owner",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Customer",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BusinessHour",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Appointment",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "TimeSlot",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BookableService",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "Business": [
+            {
+                "to": "BusinessHour",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "*",
+                "kind": "directed (->)"
+            },
+            {
+                "to": "TimeSlot",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "*",
+                "kind": "directed (->)"
+            },
+            {
+                "to": "TimeSlot",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "*",
+                "kind": "directed (->)"
+            }
+        ],
+        "ServiceCombo": [
+            {
+                "to": "ComboItem",
+                "from_multiplicity": "*",
+                "to_multiplicity": "0..1",
+                "kind": "directed (->)"
+            },
+            {
+                "to": "ComboItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "2..*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "ComboItem": [
+            {
+                "to": "Service",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "directed (->)"
+            }
+        ],
+        "Appointment": [
+            {
+                "to": "Customer",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "BookableService",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "ComboItem",
+                "from_multiplicity": "*",
+                "to_multiplicity": "*",
+                "kind": "directed (->)"
+            },
+            {
+                "to": "TimeSlot",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "1",
+                "kind": "directed (->)"
+            }
+        ]
+    }
+}

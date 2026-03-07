@@ -1,0 +1,736 @@
+{
+    "classes": {
+        "AssetPlusApplication": {
+            "Attributes": [
+                "assetPlus"
+            ],
+            "Methods": []
+        },
+        "TOAssetType": {
+            "Attributes": [
+                "name",
+                "expectedLifeSpan",
+                "tOSpecificAssets"
+            ],
+            "Methods": []
+        },
+        "TOEmployee": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "TOGuest": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "TOHotelStaff": {
+            "Attributes": [
+                "ticketFixed"
+            ],
+            "Methods": []
+        },
+        "TOMaintenanceNote": {
+            "Attributes": [
+                "date",
+                "description",
+                "noteTakerEmail"
+            ],
+            "Methods": []
+        },
+        "TOMaintenanceTicket": {
+            "Attributes": [
+                "id",
+                "raisedOnDate",
+                "description",
+                "raisedByEmail",
+                "status",
+                "fixedByEmail",
+                "timeToResolve",
+                "priority",
+                "approvalRequired",
+                "assetName",
+                "floorNumber",
+                "roomNumber",
+                "imageURLs",
+                "notes",
+                "canSetNotes"
+            ],
+            "Methods": []
+        },
+        "TOManager": {
+            "Attributes": [
+                "ticketApproved"
+            ],
+            "Methods": []
+        },
+        "TOSpecificAsset": {
+            "Attributes": [
+                "assetNumber",
+                "floorNumber",
+                "roomNumber",
+                "purchaseDate",
+                "assetType"
+            ],
+            "Methods": []
+        },
+        "TOUser": {
+            "Attributes": [
+                "email",
+                "name",
+                "password",
+                "phoneNumber",
+                "ticketsRaised"
+            ],
+            "Methods": []
+        },
+        "AssetPlus": {
+            "Attributes": [
+                "employees",
+                "guests",
+                "manager",
+                "maintenanceTickets",
+                "assetTypes",
+                "specificAssets"
+            ],
+            "Methods": []
+        },
+        "AssetType": {
+            "Attributes": [
+                "assettypesByName",
+                "name",
+                "expectedLifeSpan",
+                "specificAssets"
+            ],
+            "Methods": []
+        },
+        "Employee": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "Guest": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "HotelStaff": {
+            "Attributes": [
+                "maintenanceNotes",
+                "maintenanceTasks"
+            ],
+            "Methods": []
+        },
+        "MaintenanceNote": {
+            "Attributes": [
+                "date",
+                "description",
+                "ticket",
+                "noteTaker"
+            ],
+            "Methods": []
+        },
+        "MaintenanceTicket": {
+            "Attributes": [
+                "id",
+                "raisedOnDate",
+                "description",
+                "timeToResolve",
+                "priority",
+                "status",
+                "ticketNotes",
+                "ticketImages",
+                "ticketRaiser",
+                "ticketFixer",
+                "asset",
+                "fixApprover"
+            ],
+            "Methods": []
+        },
+        "TimeEstimate": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "PriorityLevel": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "Status": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "Manager": {
+            "Attributes": [
+                "ticketsForApproval"
+            ],
+            "Methods": []
+        },
+        "SpecificAsset": {
+            "Attributes": [
+                "assetNumber",
+                "floorNumber",
+                "roomNumber",
+                "purchaseDate",
+                "maintenanceTickets",
+                "assetType"
+            ],
+            "Methods": []
+        },
+        "TicketImage": {
+            "Attributes": [
+                "imageURL",
+                "ticket"
+            ],
+            "Methods": []
+        },
+        "User": {
+            "Attributes": [
+                "usersByEmail",
+                "email",
+                "name",
+                "password",
+                "phoneNumber",
+                "raisedTickets"
+            ],
+            "Methods": []
+        }
+    },
+    "associations": [
+        [
+            "AssetPlus",
+            "AssetPlusApplication"
+        ],
+        [
+            "AssetPlus",
+            "AssetType"
+        ],
+        [
+            "AssetPlus",
+            "Employee"
+        ],
+        [
+            "AssetPlus",
+            "Guest"
+        ],
+        [
+            "AssetPlus",
+            "HotelStaff"
+        ],
+        [
+            "AssetPlus",
+            "MaintenanceNote"
+        ],
+        [
+            "AssetPlus",
+            "MaintenanceTicket"
+        ],
+        [
+            "AssetPlus",
+            "Manager"
+        ],
+        [
+            "AssetPlus",
+            "PriorityLevel"
+        ],
+        [
+            "AssetPlus",
+            "SpecificAsset"
+        ],
+        [
+            "AssetPlus",
+            "TOAssetType"
+        ],
+        [
+            "AssetPlus",
+            "TOEmployee"
+        ],
+        [
+            "AssetPlus",
+            "TOGuest"
+        ],
+        [
+            "AssetPlus",
+            "TOHotelStaff"
+        ],
+        [
+            "AssetPlus",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "AssetPlus",
+            "TOManager"
+        ],
+        [
+            "AssetPlus",
+            "TOSpecificAsset"
+        ],
+        [
+            "AssetPlus",
+            "TOUser"
+        ],
+        [
+            "AssetPlus",
+            "TicketImage"
+        ],
+        [
+            "AssetPlus",
+            "User"
+        ],
+        [
+            "AssetPlusApplication",
+            "AssetType"
+        ],
+        [
+            "AssetPlusApplication",
+            "Employee"
+        ],
+        [
+            "AssetPlusApplication",
+            "Guest"
+        ],
+        [
+            "AssetPlusApplication",
+            "HotelStaff"
+        ],
+        [
+            "AssetPlusApplication",
+            "MaintenanceTicket"
+        ],
+        [
+            "AssetPlusApplication",
+            "Manager"
+        ],
+        [
+            "AssetPlusApplication",
+            "SpecificAsset"
+        ],
+        [
+            "AssetPlusApplication",
+            "TOHotelStaff"
+        ],
+        [
+            "AssetPlusApplication",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "AssetPlusApplication",
+            "TOManager"
+        ],
+        [
+            "AssetPlusApplication",
+            "TOSpecificAsset"
+        ],
+        [
+            "AssetPlusApplication",
+            "TOUser"
+        ],
+        [
+            "AssetPlusApplication",
+            "TicketImage"
+        ],
+        [
+            "AssetPlusApplication",
+            "User"
+        ],
+        [
+            "AssetType",
+            "MaintenanceTicket"
+        ],
+        [
+            "AssetType",
+            "SpecificAsset"
+        ],
+        [
+            "AssetType",
+            "TOAssetType"
+        ],
+        [
+            "AssetType",
+            "TOSpecificAsset"
+        ],
+        [
+            "Employee",
+            "HotelStaff"
+        ],
+        [
+            "Employee",
+            "MaintenanceNote"
+        ],
+        [
+            "Employee",
+            "MaintenanceTicket"
+        ],
+        [
+            "Employee",
+            "Manager"
+        ],
+        [
+            "Employee",
+            "SpecificAsset"
+        ],
+        [
+            "Employee",
+            "TOEmployee"
+        ],
+        [
+            "Employee",
+            "TOUser"
+        ],
+        [
+            "Employee",
+            "User"
+        ],
+        [
+            "Guest",
+            "MaintenanceTicket"
+        ],
+        [
+            "Guest",
+            "Manager"
+        ],
+        [
+            "Guest",
+            "SpecificAsset"
+        ],
+        [
+            "Guest",
+            "TOGuest"
+        ],
+        [
+            "Guest",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "Guest",
+            "TOUser"
+        ],
+        [
+            "Guest",
+            "User"
+        ],
+        [
+            "HotelStaff",
+            "MaintenanceNote"
+        ],
+        [
+            "HotelStaff",
+            "MaintenanceTicket"
+        ],
+        [
+            "HotelStaff",
+            "Manager"
+        ],
+        [
+            "HotelStaff",
+            "SpecificAsset"
+        ],
+        [
+            "HotelStaff",
+            "TOEmployee"
+        ],
+        [
+            "HotelStaff",
+            "TOHotelStaff"
+        ],
+        [
+            "HotelStaff",
+            "TOMaintenanceNote"
+        ],
+        [
+            "HotelStaff",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "HotelStaff",
+            "TOManager"
+        ],
+        [
+            "HotelStaff",
+            "TOUser"
+        ],
+        [
+            "MaintenanceNote",
+            "MaintenanceTicket"
+        ],
+        [
+            "MaintenanceNote",
+            "Manager"
+        ],
+        [
+            "MaintenanceNote",
+            "TOEmployee"
+        ],
+        [
+            "MaintenanceNote",
+            "TOHotelStaff"
+        ],
+        [
+            "MaintenanceNote",
+            "TOMaintenanceNote"
+        ],
+        [
+            "MaintenanceNote",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "MaintenanceNote",
+            "TOManager"
+        ],
+        [
+            "MaintenanceNote",
+            "TOSpecificAsset"
+        ],
+        [
+            "MaintenanceNote",
+            "TOUser"
+        ],
+        [
+            "MaintenanceTicket",
+            "Manager"
+        ],
+        [
+            "MaintenanceTicket",
+            "PriorityLevel"
+        ],
+        [
+            "MaintenanceTicket",
+            "SpecificAsset"
+        ],
+        [
+            "MaintenanceTicket",
+            "Status"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOAssetType"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOEmployee"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOGuest"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOHotelStaff"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOMaintenanceNote"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOManager"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOSpecificAsset"
+        ],
+        [
+            "MaintenanceTicket",
+            "TOUser"
+        ],
+        [
+            "MaintenanceTicket",
+            "TicketImage"
+        ],
+        [
+            "MaintenanceTicket",
+            "TimeEstimate"
+        ],
+        [
+            "MaintenanceTicket",
+            "User"
+        ],
+        [
+            "Manager",
+            "SpecificAsset"
+        ],
+        [
+            "Manager",
+            "TOEmployee"
+        ],
+        [
+            "Manager",
+            "TOHotelStaff"
+        ],
+        [
+            "Manager",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "Manager",
+            "TOManager"
+        ],
+        [
+            "Manager",
+            "TOSpecificAsset"
+        ],
+        [
+            "Manager",
+            "TOUser"
+        ],
+        [
+            "Manager",
+            "TicketImage"
+        ],
+        [
+            "Manager",
+            "User"
+        ],
+        [
+            "PriorityLevel",
+            "TOEmployee"
+        ],
+        [
+            "PriorityLevel",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "PriorityLevel",
+            "TOManager"
+        ],
+        [
+            "SpecificAsset",
+            "TOAssetType"
+        ],
+        [
+            "SpecificAsset",
+            "TOHotelStaff"
+        ],
+        [
+            "SpecificAsset",
+            "TOMaintenanceNote"
+        ],
+        [
+            "SpecificAsset",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "SpecificAsset",
+            "TOSpecificAsset"
+        ],
+        [
+            "Status",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "Status",
+            "TicketImage"
+        ],
+        [
+            "TOAssetType",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "TOAssetType",
+            "TOSpecificAsset"
+        ],
+        [
+            "TOEmployee",
+            "TOHotelStaff"
+        ],
+        [
+            "TOEmployee",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "TOEmployee",
+            "TOManager"
+        ],
+        [
+            "TOEmployee",
+            "TOUser"
+        ],
+        [
+            "TOEmployee",
+            "TicketImage"
+        ],
+        [
+            "TOEmployee",
+            "User"
+        ],
+        [
+            "TOGuest",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "TOGuest",
+            "TOManager"
+        ],
+        [
+            "TOGuest",
+            "TOUser"
+        ],
+        [
+            "TOGuest",
+            "TicketImage"
+        ],
+        [
+            "TOGuest",
+            "User"
+        ],
+        [
+            "TOHotelStaff",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "TOHotelStaff",
+            "TOManager"
+        ],
+        [
+            "TOHotelStaff",
+            "TicketImage"
+        ],
+        [
+            "TOMaintenanceNote",
+            "TOMaintenanceTicket"
+        ],
+        [
+            "TOMaintenanceNote",
+            "TOUser"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "TOManager"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "TOSpecificAsset"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "TOUser"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "TicketImage"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "TimeEstimate"
+        ],
+        [
+            "TOMaintenanceTicket",
+            "User"
+        ],
+        [
+            "TOManager",
+            "TOUser"
+        ],
+        [
+            "TOManager",
+            "TicketImage"
+        ],
+        [
+            "TOUser",
+            "TicketImage"
+        ],
+        [
+            "TOUser",
+            "User"
+        ]
+    ]
+}

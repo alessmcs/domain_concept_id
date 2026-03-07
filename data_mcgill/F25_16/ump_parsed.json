@@ -1,0 +1,185 @@
+{
+    "classes": {
+        "CheECSEManager": {
+            "extends": null,
+            "attributes": []
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "password"
+            ]
+        },
+        "FacilityManager": {
+            "extends": "User",
+            "attributes": []
+        },
+        "Farmer": {
+            "extends": "User",
+            "attributes": [
+                "address"
+            ]
+        },
+        "WholesaleCompany": {
+            "extends": null,
+            "attributes": [
+                "name",
+                "address"
+            ]
+        },
+        "Shelf": {
+            "extends": null,
+            "attributes": [
+                "id"
+            ]
+        },
+        "ShelfLocation": {
+            "extends": null,
+            "attributes": []
+        },
+        "CheeseWheel": {
+            "extends": null,
+            "attributes": [
+                "isSpoiled : Boolean"
+            ]
+        },
+        "Transaction": {
+            "extends": null,
+            "attributes": [
+                "transactionDate : Date"
+            ]
+        },
+        "Purchase": {
+            "extends": "Transaction",
+            "attributes": []
+        },
+        "Order": {
+            "extends": "Transaction",
+            "attributes": [
+                "deliveryDate : Date"
+            ]
+        },
+        "Robot": {
+            "extends": null,
+            "attributes": [
+                "isFacingAisle : Boolean"
+            ]
+        },
+        "LogEntry": {
+            "extends": null,
+            "attributes": [
+                "description"
+            ]
+        }
+    },
+    "associations": {
+        "CheECSEManager": [
+            {
+                "to": "FacilityManager",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Farmer",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Shelf",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "CheeseWheel",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Transaction",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "WholesaleCompany",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Robot",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "Farmer": [
+            {
+                "to": "Purchase",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "bidirectional (--)"
+            }
+        ],
+        "WholesaleCompany": [
+            {
+                "to": "Order",
+                "from_multiplicity": "company",
+                "to_multiplicity": "*",
+                "kind": "bidirectional (--)"
+            }
+        ],
+        "Shelf": [
+            {
+                "to": "ShelfLocation",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "CheeseWheel": [
+            {
+                "to": "Purchase",
+                "from_multiplicity": "cheeseWheels",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "ShelfLocation",
+                "from_multiplicity": "cheeseWheel",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Order",
+                "from_multiplicity": "cheeseWheels",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            }
+        ],
+        "Robot": [
+            {
+                "to": "Shelf",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "CheeseWheel",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "LogEntry",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ]
+    }
+}

@@ -1,0 +1,116 @@
+{
+    "classes": {
+        "AssetPlus": {
+            "extends": null,
+            "attributes": []
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "name : String",
+                "password : String",
+                "phoneNumber : String"
+            ]
+        },
+        "HotelStaff": {
+            "extends": "User",
+            "attributes": []
+        },
+        "Guest": {
+            "extends": "User",
+            "attributes": []
+        },
+        "Employee": {
+            "extends": "HotelStaff",
+            "attributes": []
+        },
+        "Manager": {
+            "extends": "HotelStaff",
+            "attributes": []
+        },
+        "MaintenanceTicket": {
+            "extends": null,
+            "attributes": [
+                "raisedOnDate : Date",
+                "description : String"
+            ]
+        },
+        "MaintenanceNote": {
+            "extends": null,
+            "attributes": [
+                "date : Date",
+                "description : String"
+            ]
+        },
+        "TicketImage": {
+            "extends": null,
+            "attributes": [
+                "imageURL : String"
+            ]
+        },
+        "SpecificAsset": {
+            "extends": null,
+            "attributes": [
+                "purchaseDate : Date"
+            ]
+        },
+        "AssetType": {
+            "extends": null,
+            "attributes": []
+        }
+    },
+    "associations": {
+        "AssetPlus": [
+            {
+                "to": "Employee",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Guest",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Manager",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "MaintenanceTicket",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "AssetType",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "SpecificAsset",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "MaintenanceTicket": [
+            {
+                "to": "MaintenanceNote",
+                "from_multiplicity": "ticket",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "TicketImage",
+                "from_multiplicity": "ticket",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ]
+    }
+}

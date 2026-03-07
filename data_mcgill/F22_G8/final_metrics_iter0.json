@@ -1,0 +1,385 @@
+{
+    "classes": {
+        "TOBikeTour": {
+            "Attributes": [
+                "id",
+                "startWeek",
+                "endWeek",
+                "guideEmail",
+                "guideName",
+                "totalCostForGuide",
+                "participantCosts"
+            ],
+            "Methods": []
+        },
+        "TOBikeTourUI": {
+            "Attributes": [
+                "id",
+                "guideName",
+                "startWeek",
+                "endWeek",
+                "participants",
+                "guideTourCost"
+            ],
+            "Methods": []
+        },
+        "TOParticipantCost": {
+            "Attributes": [
+                "participantName",
+                "totalCostForBookableItems",
+                "totalCostForBikingTour",
+                "tourID",
+                "status",
+                "authorizationCode",
+                "refundedPercentageAmount"
+            ],
+            "Methods": []
+        },
+        "BikeTour": {
+            "Attributes": [
+                "id",
+                "startWeek",
+                "endWeek",
+                "participants",
+                "guide",
+                "lodge"
+            ],
+            "Methods": []
+        },
+        "BookableItem": {
+            "Attributes": [
+                "bookableitemsByName",
+                "name",
+                "bookedItems"
+            ],
+            "Methods": []
+        },
+        "BookedItem": {
+            "Attributes": [
+                "quantity",
+                "participant",
+                "item",
+                "canSetParticipant",
+                "canSetItem"
+            ],
+            "Methods": []
+        },
+        "Combo": {
+            "Attributes": [
+                "discount",
+                "comboItems"
+            ],
+            "Methods": []
+        },
+        "ComboItem": {
+            "Attributes": [
+                "quantity",
+                "combo",
+                "gear",
+                "canSetCombo",
+                "canSetGear"
+            ],
+            "Methods": []
+        },
+        "Gear": {
+            "Attributes": [
+                "pricePerWeek",
+                "comboItems"
+            ],
+            "Methods": []
+        },
+        "Guide": {
+            "Attributes": [
+                "bikeTours"
+            ],
+            "Methods": []
+        },
+        "Lodge": {
+            "Attributes": [
+                "lodgesByName",
+                "name",
+                "address",
+                "rating"
+            ],
+            "Methods": []
+        },
+        "LodgeRating": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "Manager": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "NamedUser": {
+            "Attributes": [
+                "name",
+                "emergencyContact"
+            ],
+            "Methods": []
+        },
+        "Participant": {
+            "Attributes": [
+                "nrWeeks",
+                "weekAvailableFrom",
+                "weekAvailableUntil",
+                "lodgeRequired",
+                "authorizationCode",
+                "refundedPercentageAmount",
+                "tourStatus",
+                "bikeTour",
+                "bookedItems"
+            ],
+            "Methods": []
+        },
+        "TourStatus": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "User": {
+            "Attributes": [
+                "email",
+                "password"
+            ],
+            "Methods": []
+        }
+    },
+    "associations": [
+        [
+            "BikeTour",
+            "BookedItem"
+        ],
+        [
+            "BikeTour",
+            "Combo"
+        ],
+        [
+            "BikeTour",
+            "Gear"
+        ],
+        [
+            "BikeTour",
+            "Guide"
+        ],
+        [
+            "BikeTour",
+            "Lodge"
+        ],
+        [
+            "BikeTour",
+            "LodgeRating"
+        ],
+        [
+            "BikeTour",
+            "Manager"
+        ],
+        [
+            "BikeTour",
+            "Participant"
+        ],
+        [
+            "BikeTour",
+            "TOBikeTour"
+        ],
+        [
+            "BikeTour",
+            "TOBikeTourUI"
+        ],
+        [
+            "BikeTour",
+            "TOParticipantCost"
+        ],
+        [
+            "BookableItem",
+            "BookedItem"
+        ],
+        [
+            "BookableItem",
+            "Combo"
+        ],
+        [
+            "BookableItem",
+            "ComboItem"
+        ],
+        [
+            "BookableItem",
+            "Gear"
+        ],
+        [
+            "BookableItem",
+            "Lodge"
+        ],
+        [
+            "BookableItem",
+            "LodgeRating"
+        ],
+        [
+            "BookableItem",
+            "Participant"
+        ],
+        [
+            "BookableItem",
+            "TOParticipantCost"
+        ],
+        [
+            "BookedItem",
+            "Combo"
+        ],
+        [
+            "BookedItem",
+            "ComboItem"
+        ],
+        [
+            "BookedItem",
+            "Gear"
+        ],
+        [
+            "BookedItem",
+            "Lodge"
+        ],
+        [
+            "BookedItem",
+            "Participant"
+        ],
+        [
+            "BookedItem",
+            "TOBikeTour"
+        ],
+        [
+            "BookedItem",
+            "TOParticipantCost"
+        ],
+        [
+            "Combo",
+            "ComboItem"
+        ],
+        [
+            "Combo",
+            "Gear"
+        ],
+        [
+            "Combo",
+            "Lodge"
+        ],
+        [
+            "Combo",
+            "Manager"
+        ],
+        [
+            "Combo",
+            "Participant"
+        ],
+        [
+            "Combo",
+            "TOBikeTour"
+        ],
+        [
+            "ComboItem",
+            "Gear"
+        ],
+        [
+            "ComboItem",
+            "Participant"
+        ],
+        [
+            "Gear",
+            "Participant"
+        ],
+        [
+            "Gear",
+            "TOBikeTour"
+        ],
+        [
+            "Guide",
+            "Participant"
+        ],
+        [
+            "Guide",
+            "TOBikeTour"
+        ],
+        [
+            "Guide",
+            "TOBikeTourUI"
+        ],
+        [
+            "Lodge",
+            "LodgeRating"
+        ],
+        [
+            "Lodge",
+            "Participant"
+        ],
+        [
+            "Lodge",
+            "TOBikeTour"
+        ],
+        [
+            "Lodge",
+            "TOBikeTourUI"
+        ],
+        [
+            "Manager",
+            "Participant"
+        ],
+        [
+            "NamedUser",
+            "Participant"
+        ],
+        [
+            "NamedUser",
+            "TOBikeTour"
+        ],
+        [
+            "NamedUser",
+            "TOParticipantCost"
+        ],
+        [
+            "NamedUser",
+            "User"
+        ],
+        [
+            "Participant",
+            "TOBikeTour"
+        ],
+        [
+            "Participant",
+            "TOBikeTourUI"
+        ],
+        [
+            "Participant",
+            "TOParticipantCost"
+        ],
+        [
+            "Participant",
+            "TourStatus"
+        ],
+        [
+            "Participant",
+            "User"
+        ],
+        [
+            "TOBikeTour",
+            "TOBikeTourUI"
+        ],
+        [
+            "TOBikeTour",
+            "TOParticipantCost"
+        ],
+        [
+            "TOBikeTour",
+            "User"
+        ],
+        [
+            "TOBikeTourUI",
+            "TOParticipantCost"
+        ],
+        [
+            "TOParticipantCost",
+            "TourStatus"
+        ],
+        [
+            "TOParticipantCost",
+            "User"
+        ]
+    ]
+}

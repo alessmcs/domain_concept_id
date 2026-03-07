@@ -1,0 +1,142 @@
+{
+    "classes": {
+        "BikeTourPlus": {
+            "extends": null,
+            "attributes": [
+                "startDate : Date"
+            ]
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "email",
+                "password"
+            ]
+        },
+        "Manager": {
+            "extends": "User",
+            "attributes": []
+        },
+        "NamedUser": {
+            "extends": "User",
+            "attributes": [
+                "name",
+                "emergencyContact"
+            ]
+        },
+        "Guide": {
+            "extends": "NamedUser",
+            "attributes": []
+        },
+        "Participant": {
+            "extends": "NamedUser",
+            "attributes": [
+                "lodgeRequired : Boolean",
+                "authorizationCode"
+            ]
+        },
+        "BookableItem": {
+            "extends": null,
+            "attributes": [
+                "name"
+            ]
+        },
+        "Gear": {
+            "extends": "BookableItem",
+            "attributes": []
+        },
+        "Combo": {
+            "extends": "BookableItem",
+            "attributes": []
+        },
+        "Lodge": {
+            "extends": null,
+            "attributes": [
+                "name",
+                "address"
+            ]
+        },
+        "BikeTour": {
+            "extends": null,
+            "attributes": []
+        }
+    },
+    "associations": {
+        "BikeTourPlus": [
+            {
+                "to": "Manager",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Guide",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Participant",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BookedItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Gear",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Combo",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "ComboItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Lodge",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BikeTour",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "BikeTour": [
+            {
+                "to": "Participant",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "*",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Guide",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Lodge",
+                "from_multiplicity": "*",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            }
+        ]
+    }
+}

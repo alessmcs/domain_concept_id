@@ -1,0 +1,142 @@
+{
+    "classes": {
+        "ClimbSafe": {
+            "extends": null,
+            "attributes": [
+                "startDate : Date"
+            ]
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "email",
+                "password"
+            ]
+        },
+        "Administrator": {
+            "extends": "User",
+            "attributes": []
+        },
+        "NamedUser": {
+            "extends": "User",
+            "attributes": [
+                "name",
+                "emergencyContact"
+            ]
+        },
+        "Guide": {
+            "extends": "NamedUser",
+            "attributes": []
+        },
+        "Member": {
+            "extends": "NamedUser",
+            "attributes": [
+                "guideRequired : Boolean",
+                "hotelRequired : Boolean"
+            ]
+        },
+        "BookableItem": {
+            "extends": null,
+            "attributes": [
+                "name"
+            ]
+        },
+        "Equipment": {
+            "extends": "BookableItem",
+            "attributes": []
+        },
+        "EquipmentBundle": {
+            "extends": "BookableItem",
+            "attributes": []
+        },
+        "Hotel": {
+            "extends": null,
+            "attributes": [
+                "name",
+                "address"
+            ]
+        },
+        "Assignment": {
+            "extends": null,
+            "attributes": []
+        }
+    },
+    "associations": {
+        "ClimbSafe": [
+            {
+                "to": "Administrator",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Guide",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Member",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BookedItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Equipment",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "EquipmentBundle",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BundleItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Hotel",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Assignment",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "Assignment": [
+            {
+                "to": "Member",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Guide",
+                "from_multiplicity": "*",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Hotel",
+                "from_multiplicity": "*",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            }
+        ]
+    }
+}

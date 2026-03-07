@@ -1,0 +1,705 @@
+{
+    "classes": {
+        "ClimbSafeApplication": {
+            "Attributes": [
+                "climbSafe"
+            ],
+            "Methods": []
+        },
+        "TOAssignment": {
+            "Attributes": [
+                "memberEmail",
+                "memberName",
+                "guideEmail",
+                "guideName",
+                "hotelName",
+                "startWeek",
+                "endWeek",
+                "totalCostForGuide",
+                "totalCostForEquipment",
+                "status"
+            ],
+            "Methods": []
+        },
+        "TOEquipment": {
+            "Attributes": [
+                "pricePerWeek",
+                "weight",
+                "name"
+            ],
+            "Methods": []
+        },
+        "TOGuide": {
+            "Attributes": [
+                "email",
+                "password",
+                "name",
+                "emergencyContact"
+            ],
+            "Methods": []
+        },
+        "TOMember": {
+            "Attributes": [
+                "email",
+                "password",
+                "name",
+                "emergencyContact",
+                "nrWeeks",
+                "guideRequired",
+                "hotelRequired"
+            ],
+            "Methods": []
+        },
+        "TOBookableItem": {
+            "Attributes": [
+                "name"
+            ],
+            "Methods": []
+        },
+        "Administrator": {
+            "Attributes": [
+                "climbSafe"
+            ],
+            "Methods": []
+        },
+        "Assignment": {
+            "Attributes": [
+                "startWeek",
+                "endWeek",
+                "assignmentStatus",
+                "member",
+                "guide",
+                "hotel"
+            ],
+            "Methods": []
+        },
+        "AssignmentStatus": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "BookableItem": {
+            "Attributes": [
+                "bookableitemsByName",
+                "name",
+                "bookedItems"
+            ],
+            "Methods": []
+        },
+        "BookedItem": {
+            "Attributes": [
+                "quantity",
+                "member",
+                "item",
+                "canSetMember",
+                "canSetItem"
+            ],
+            "Methods": []
+        },
+        "BundleItem": {
+            "Attributes": [
+                "quantity",
+                "bundle",
+                "equipment",
+                "canSetBundle",
+                "canSetEquipment"
+            ],
+            "Methods": []
+        },
+        "ClimbSafe": {
+            "Attributes": [
+                "startDate",
+                "nrWeeks",
+                "priceOfGuidePerWeek",
+                "administrator",
+                "guides",
+                "members",
+                "bookedItems",
+                "equipment",
+                "bundles",
+                "bundleItems",
+                "hotels",
+                "assignments"
+            ],
+            "Methods": []
+        },
+        "Equipment": {
+            "Attributes": [
+                "weight",
+                "pricePerWeek",
+                "bundleItems"
+            ],
+            "Methods": []
+        },
+        "EquipmentBundle": {
+            "Attributes": [
+                "discount",
+                "bundleItems"
+            ],
+            "Methods": []
+        },
+        "Guide": {
+            "Attributes": [
+                "assignments"
+            ],
+            "Methods": []
+        },
+        "Hotel": {
+            "Attributes": [
+                "hotelsByName",
+                "name",
+                "address",
+                "rating",
+                "assignments"
+            ],
+            "Methods": []
+        },
+        "HotelRating": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "Member": {
+            "Attributes": [
+                "nrWeeks",
+                "guideRequired",
+                "hotelRequired",
+                "memberStatus",
+                "assignment",
+                "bookedItems",
+                "refundPercentage"
+            ],
+            "Methods": []
+        },
+        "MemberStatus": {
+            "Attributes": [],
+            "Methods": []
+        },
+        "NamedUser": {
+            "Attributes": [
+                "name",
+                "emergencyContact"
+            ],
+            "Methods": []
+        },
+        "User": {
+            "Attributes": [
+                "email",
+                "password"
+            ],
+            "Methods": []
+        }
+    },
+    "associations": [
+        [
+            "Administrator",
+            "Administrator"
+        ],
+        [
+            "Administrator",
+            "Assignment"
+        ],
+        [
+            "Administrator",
+            "BookableItem"
+        ],
+        [
+            "Administrator",
+            "BookedItem"
+        ],
+        [
+            "Administrator",
+            "BundleItem"
+        ],
+        [
+            "Administrator",
+            "ClimbSafe"
+        ],
+        [
+            "Administrator",
+            "ClimbSafeApplication"
+        ],
+        [
+            "Administrator",
+            "Equipment"
+        ],
+        [
+            "Administrator",
+            "EquipmentBundle"
+        ],
+        [
+            "Administrator",
+            "Guide"
+        ],
+        [
+            "Administrator",
+            "Hotel"
+        ],
+        [
+            "Administrator",
+            "Member"
+        ],
+        [
+            "Administrator",
+            "TOEquipment"
+        ],
+        [
+            "Administrator",
+            "TOGuide"
+        ],
+        [
+            "Administrator",
+            "TOMember"
+        ],
+        [
+            "Assignment",
+            "AssignmentStatus"
+        ],
+        [
+            "Assignment",
+            "BookedItem"
+        ],
+        [
+            "Assignment",
+            "ClimbSafe"
+        ],
+        [
+            "Assignment",
+            "ClimbSafeApplication"
+        ],
+        [
+            "Assignment",
+            "Guide"
+        ],
+        [
+            "Assignment",
+            "Hotel"
+        ],
+        [
+            "Assignment",
+            "Member"
+        ],
+        [
+            "Assignment",
+            "NamedUser"
+        ],
+        [
+            "Assignment",
+            "TOAssignment"
+        ],
+        [
+            "Assignment",
+            "TOBookableItem"
+        ],
+        [
+            "Assignment",
+            "TOGuide"
+        ],
+        [
+            "Assignment",
+            "TOMember"
+        ],
+        [
+            "AssignmentStatus",
+            "ClimbSafe"
+        ],
+        [
+            "AssignmentStatus",
+            "Guide"
+        ],
+        [
+            "AssignmentStatus",
+            "Member"
+        ],
+        [
+            "AssignmentStatus",
+            "TOAssignment"
+        ],
+        [
+            "BookableItem",
+            "BookedItem"
+        ],
+        [
+            "BookableItem",
+            "BundleItem"
+        ],
+        [
+            "BookableItem",
+            "ClimbSafe"
+        ],
+        [
+            "BookableItem",
+            "ClimbSafeApplication"
+        ],
+        [
+            "BookableItem",
+            "Equipment"
+        ],
+        [
+            "BookableItem",
+            "EquipmentBundle"
+        ],
+        [
+            "BookableItem",
+            "Guide"
+        ],
+        [
+            "BookableItem",
+            "Hotel"
+        ],
+        [
+            "BookableItem",
+            "HotelRating"
+        ],
+        [
+            "BookableItem",
+            "Member"
+        ],
+        [
+            "BookableItem",
+            "TOBookableItem"
+        ],
+        [
+            "BookableItem",
+            "TOEquipment"
+        ],
+        [
+            "BookedItem",
+            "BundleItem"
+        ],
+        [
+            "BookedItem",
+            "ClimbSafe"
+        ],
+        [
+            "BookedItem",
+            "ClimbSafeApplication"
+        ],
+        [
+            "BookedItem",
+            "Equipment"
+        ],
+        [
+            "BookedItem",
+            "EquipmentBundle"
+        ],
+        [
+            "BookedItem",
+            "Guide"
+        ],
+        [
+            "BookedItem",
+            "Hotel"
+        ],
+        [
+            "BookedItem",
+            "Member"
+        ],
+        [
+            "BookedItem",
+            "TOAssignment"
+        ],
+        [
+            "BookedItem",
+            "TOBookableItem"
+        ],
+        [
+            "BookedItem",
+            "TOEquipment"
+        ],
+        [
+            "BookedItem",
+            "TOMember"
+        ],
+        [
+            "BundleItem",
+            "ClimbSafe"
+        ],
+        [
+            "BundleItem",
+            "Equipment"
+        ],
+        [
+            "BundleItem",
+            "EquipmentBundle"
+        ],
+        [
+            "BundleItem",
+            "TOBookableItem"
+        ],
+        [
+            "BundleItem",
+            "TOEquipment"
+        ],
+        [
+            "ClimbSafe",
+            "ClimbSafeApplication"
+        ],
+        [
+            "ClimbSafe",
+            "Equipment"
+        ],
+        [
+            "ClimbSafe",
+            "EquipmentBundle"
+        ],
+        [
+            "ClimbSafe",
+            "Guide"
+        ],
+        [
+            "ClimbSafe",
+            "Hotel"
+        ],
+        [
+            "ClimbSafe",
+            "HotelRating"
+        ],
+        [
+            "ClimbSafe",
+            "Member"
+        ],
+        [
+            "ClimbSafe",
+            "TOAssignment"
+        ],
+        [
+            "ClimbSafe",
+            "TOBookableItem"
+        ],
+        [
+            "ClimbSafe",
+            "TOEquipment"
+        ],
+        [
+            "ClimbSafe",
+            "TOGuide"
+        ],
+        [
+            "ClimbSafe",
+            "TOMember"
+        ],
+        [
+            "ClimbSafe",
+            "User"
+        ],
+        [
+            "ClimbSafeApplication",
+            "Equipment"
+        ],
+        [
+            "ClimbSafeApplication",
+            "EquipmentBundle"
+        ],
+        [
+            "ClimbSafeApplication",
+            "Guide"
+        ],
+        [
+            "ClimbSafeApplication",
+            "Hotel"
+        ],
+        [
+            "ClimbSafeApplication",
+            "Member"
+        ],
+        [
+            "ClimbSafeApplication",
+            "NamedUser"
+        ],
+        [
+            "ClimbSafeApplication",
+            "TOAssignment"
+        ],
+        [
+            "ClimbSafeApplication",
+            "TOGuide"
+        ],
+        [
+            "ClimbSafeApplication",
+            "TOMember"
+        ],
+        [
+            "ClimbSafeApplication",
+            "User"
+        ],
+        [
+            "Equipment",
+            "EquipmentBundle"
+        ],
+        [
+            "Equipment",
+            "Member"
+        ],
+        [
+            "Equipment",
+            "TOBookableItem"
+        ],
+        [
+            "Equipment",
+            "TOEquipment"
+        ],
+        [
+            "Equipment",
+            "TOMember"
+        ],
+        [
+            "EquipmentBundle",
+            "Member"
+        ],
+        [
+            "EquipmentBundle",
+            "TOAssignment"
+        ],
+        [
+            "EquipmentBundle",
+            "TOBookableItem"
+        ],
+        [
+            "EquipmentBundle",
+            "TOEquipment"
+        ],
+        [
+            "EquipmentBundle",
+            "TOMember"
+        ],
+        [
+            "Guide",
+            "Member"
+        ],
+        [
+            "Guide",
+            "NamedUser"
+        ],
+        [
+            "Guide",
+            "TOAssignment"
+        ],
+        [
+            "Guide",
+            "TOGuide"
+        ],
+        [
+            "Guide",
+            "TOMember"
+        ],
+        [
+            "Hotel",
+            "HotelRating"
+        ],
+        [
+            "Hotel",
+            "Member"
+        ],
+        [
+            "Hotel",
+            "TOAssignment"
+        ],
+        [
+            "Hotel",
+            "TOBookableItem"
+        ],
+        [
+            "Hotel",
+            "TOMember"
+        ],
+        [
+            "HotelRating",
+            "Member"
+        ],
+        [
+            "HotelRating",
+            "TOAssignment"
+        ],
+        [
+            "HotelRating",
+            "TOBookableItem"
+        ],
+        [
+            "HotelRating",
+            "TOMember"
+        ],
+        [
+            "Member",
+            "MemberStatus"
+        ],
+        [
+            "Member",
+            "NamedUser"
+        ],
+        [
+            "Member",
+            "TOAssignment"
+        ],
+        [
+            "Member",
+            "TOBookableItem"
+        ],
+        [
+            "Member",
+            "TOEquipment"
+        ],
+        [
+            "Member",
+            "TOGuide"
+        ],
+        [
+            "Member",
+            "TOMember"
+        ],
+        [
+            "Member",
+            "User"
+        ],
+        [
+            "MemberStatus",
+            "TOAssignment"
+        ],
+        [
+            "MemberStatus",
+            "TOMember"
+        ],
+        [
+            "NamedUser",
+            "TOAssignment"
+        ],
+        [
+            "NamedUser",
+            "TOGuide"
+        ],
+        [
+            "NamedUser",
+            "TOMember"
+        ],
+        [
+            "NamedUser",
+            "User"
+        ],
+        [
+            "TOAssignment",
+            "TOGuide"
+        ],
+        [
+            "TOAssignment",
+            "TOMember"
+        ],
+        [
+            "TOAssignment",
+            "User"
+        ],
+        [
+            "TOBookableItem",
+            "TOEquipment"
+        ],
+        [
+            "TOGuide",
+            "TOMember"
+        ],
+        [
+            "TOGuide",
+            "User"
+        ],
+        [
+            "TOMember",
+            "User"
+        ]
+    ]
+}

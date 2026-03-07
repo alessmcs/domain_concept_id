@@ -1,0 +1,3 @@
+dateTime,iteration#,class_precision,method_precision,attr_precision,asso_precision_relaxed,avg_precision
+2026-03-06 07:06:28.784215,0,0.5,0,0.4226190476190476,0.34428508936382957
+2026-03-06 08:24:06.646977,0,0.5,0,0.4226190476190476,0.34428508936382957

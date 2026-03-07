@@ -1,0 +1,150 @@
+{
+    "classes": {
+        "CoolSupplies": {
+            "extends": null,
+            "attributes": []
+        },
+        "User": {
+            "extends": null,
+            "attributes": [
+                "password"
+            ]
+        },
+        "SchoolAdmin": {
+            "extends": "User",
+            "attributes": []
+        },
+        "Parent": {
+            "extends": "User",
+            "attributes": [
+                "name"
+            ]
+        },
+        "Student": {
+            "extends": null,
+            "attributes": [
+                "name"
+            ]
+        },
+        "Order": {
+            "extends": null,
+            "attributes": [
+                "date : Date"
+            ]
+        },
+        "InventoryItem": {
+            "extends": null,
+            "attributes": [
+                "name"
+            ]
+        },
+        "Item": {
+            "extends": "InventoryItem",
+            "attributes": []
+        },
+        "GradeBundle": {
+            "extends": "InventoryItem",
+            "attributes": []
+        },
+        "Grade": {
+            "extends": null,
+            "attributes": [
+                "level"
+            ]
+        }
+    },
+    "associations": {
+        "CoolSupplies": [
+            {
+                "to": "SchoolAdmin",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Student",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Parent",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Item",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "GradeBundle",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "BundleItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Order",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "OrderItem",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            },
+            {
+                "to": "Grade",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "composition (<@>-)"
+            }
+        ],
+        "Parent": [
+            {
+                "to": "Student",
+                "from_multiplicity": "0..1",
+                "to_multiplicity": "*",
+                "kind": "bidirectional (--)"
+            }
+        ],
+        "Order": [
+            {
+                "to": "Parent",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Student",
+                "from_multiplicity": "*",
+                "to_multiplicity": "1",
+                "kind": "bidirectional (--)"
+            }
+        ],
+        "Grade": [
+            {
+                "to": "GradeBundle",
+                "from_multiplicity": "1",
+                "to_multiplicity": "0..1",
+                "kind": "bidirectional (--)"
+            },
+            {
+                "to": "Student",
+                "from_multiplicity": "1",
+                "to_multiplicity": "*",
+                "kind": "bidirectional (--)"
+            }
+        ]
+    }
+}
