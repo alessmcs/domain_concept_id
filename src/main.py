@@ -509,31 +509,38 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
 
     # Time to validate!! 
 
+    # Output metrics_object to a file (json)
+    metrics_output_file = os.path.join(
+        os.path.dirname(labels_file) if labels_file else "./model_outputs",
+        f"final_metrics_iter{iteration}.json"
+    )
+    with open(metrics_output_file, "w", encoding="utf-8") as f:
+        json.dump(final_metrics_object, f, indent=4)
+    print(f"Metrics saved to {metrics_output_file}")
+
     print("Final metrics object: ", final_metrics_object)
 
-    if labels_file is None:
-        print("WARNING: No labels file found - skipping metrics comparison")
-    elif labels_file.endswith(".json"):
-        with open(labels_file, "r", encoding="utf-8") as f:
-            labels_dict = json.load(f)
-            metrics.compare(
-                labels=labels_dict,
-                output=final_metrics_object,
-                results_file=results_file, 
-                iter_no=iteration
-            )   
-    elif labels_file.endswith(".ump"):
-        print(f"Running metrics comparison with .ump file: {labels_file}")
-        metrics.compare_ump(
-            gt=umpParser.main(labels_file), # ground truth in json format 
-            output=final_metrics_object,
-            results_file=results_file, 
-            iter_no=iteration
-        )
-    else:
-        print(f"WARNING: Unknown labels file format: {labels_file}")
-
-    # TODO: include Associations!?
+    # if labels_file is None:
+    #     print("WARNING: No labels file found - skipping metrics comparison")
+    # elif labels_file.endswith(".json"):
+    #     with open(labels_file, "r", encoding="utf-8") as f:
+    #         labels_dict = json.load(f)
+    #         metrics.compare(
+    #             labels=labels_dict,
+    #             output=final_metrics_object,
+    #             results_file=results_file, 
+    #             iter_no=iteration
+    #         )   
+    # elif labels_file.endswith(".ump"):
+    #     print(f"Running metrics comparison with .ump file: {labels_file}")
+    #     metrics.compare_ump(
+    #         gt=umpParser.main(labels_file), # ground truth in json format 
+    #         output=final_metrics_object,
+    #         results_file=results_file, 
+    #         iter_no=iteration
+    #     )
+    # else:
+    #     print(f"WARNING: Unknown labels file format: {labels_file}")
 
 def run_all_projects(model_args, max_projects=None, iterations=0):
     base_dir = "../data_mcgill"
@@ -541,7 +548,7 @@ def run_all_projects(model_args, max_projects=None, iterations=0):
 
     # Optionally limit how many projects to run
     if max_projects is not None:
-        projects = projects[:max_projects+1]
+        projects = projects[len(projects)-1]
 
     if iterations > 0:
         for i in range(iterations):
@@ -564,6 +571,11 @@ def run_all_projects(model_args, max_projects=None, iterations=0):
                 labels_file = next((os.path.join(project_path, f) for f in os.listdir(project_path) if f.endswith(".ump")), None)
                 results_file = os.path.join(project_path, "results.csv")
                 # CSV file will be created by metrics.py with headers when first written to
+
+                ump_output = umpParser.main(labels_file)
+                ump_output_file = os.path.join(project_path, "ump_parsed.json")
+                with open(ump_output_file, "w", encoding="utf-8") as f:
+                    json.dump(ump_output, f, indent=4)
 
                 if labels_file:
                     print(f"Found labels file: {labels_file}")
@@ -617,7 +629,7 @@ if __name__ == "__main__":
     #     main(xml_file, readme_file, model_args, labels_file, csv_file, i)
 
 
-    run_all_projects(model_args, 6, 2)
+    run_all_projects(model_args, 2, 3)
 
     # testing just the comparison 
 
