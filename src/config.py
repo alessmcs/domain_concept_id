@@ -6,7 +6,7 @@ import sys
 @dataclass
 class ExLlamaArguments:
     model_dir: Optional[str] = field(
-        default="/Tmp/mancasat/models/Meta-Llama-3.1-70B-Instruct-GPTQ-INT4",
+        default="/home/alessmcs/projects/def-sahraouh/alessmcs/models/llama3-70b-exl2", # path on narval
         metadata={"help": "Path to the local model directory."}
     )
 
@@ -36,7 +36,7 @@ class ExLlamaArguments:
     )
 
     max_batch_size: Optional[int] = field(
-        default=256,
+        default=4,
         metadata={"help": "Maximum batch size to be used during inference."}
     )
 

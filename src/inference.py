@@ -212,8 +212,8 @@ class LLMClassifier:
         generator = ExLlamaV2DynamicGenerator(
             model=model,
             cache=cache,
-            tokenizer=tokenizer #,
-            # max_batch_size=model_args.max_batch_size,
+            tokenizer=tokenizer,
+            max_batch_size=model_args.max_batch_size
             # max_q_size=model_args.max_q_size
         )
 
@@ -236,7 +236,7 @@ class LLMClassifier:
         
         return tensor([all_ids], dtype=torch_long, device=torch_device("cpu"))
 
-    def classify_classes(self, json_data): 
+    def classify_classes(self, json_data, similarity_ranking): 
         """
         Re-classify the positive classes 
         Uses the ExLlamaV2 model and the supplied prompt templates.
@@ -244,6 +244,7 @@ class LLMClassifier:
         Args:
             json_data (dict): Contains 'ranked_classes', 'readme', etc.
             model_args (ExLlamaArguments): Model configuration arguments.
+            similarity_ranking (bool): Whether to use the ranked classes or not 
 
         Returns:
             dict: Updated JSON data with "classifications" and "prompt_used".
@@ -260,8 +261,11 @@ class LLMClassifier:
 
         # Retrieve data from JSON
         readme = json_data.get("readme", "")
-        ranked_classes = json_data.get("ranked_classes", [])
-        class_names = json_data.get("tokenized_class_names").keys(); # ??????
+        
+        if similarity_ranking:
+            ranked_classes = json_data.get("ranked_classes", [])
+        else:
+            ranked_classes = json_data.get("tokenized_class_names", {}).keys()  # Use tokenized class names directly if not using similarity ranking
 
         # then for every given class, you need its tokenized class name, its methods & attributes 
 
@@ -327,8 +331,8 @@ class LLMClassifier:
                         # Check if this is the job we just enqueued
                         if result.get("identifier") == i and result["eos"]:
                             response = result["full_completion"]
-                            print(result)
-                            print(response)
+#                            print(result)
+ #                           print(response)
                             class_name, classification_str = self.extract_classification(response)
                             
                             if class_name and classification_str:

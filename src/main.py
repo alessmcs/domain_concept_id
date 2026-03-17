@@ -25,12 +25,13 @@ import metrics
 import umpParser
 
 from compute_associations import get_bridging_associations
+import sys
 
 # TODO : add cardinalities to inference and perhaps more restrictions 
 
 print("All imports complete!\n")
 
-def create_json(xml_file, readme_file):
+def create_json(xml_file, readme_file, tokenization=True, similarity_ranking=True):
     """
     Create an internal JSON structure to store data throughout the workflow.
     """
@@ -45,10 +46,13 @@ def create_json(xml_file, readme_file):
 
     # Step 2: Tokenize class names
     print("Tokenizing class names...")
-    tokenized_class_names = tokenizer.tokenize_class_names(unique_class_names)
+    if tokenization:
+        tokenized_class_names = tokenizer.tokenize_class_names(unique_class_names)
+        print("Class names tokenized.")
+    else:
+        tokenized_class_names = unique_class_names # for simplicity keep the name of the key 
 
-    print("\ntype", type(tokenized_class_names)) # debug 
-    print("Class names tokenized.")
+        print("Skipping tokenization, using original class names as tokenized names.")
 
     # Similarly, add class ids from the xml file 
     class_id_map = xmiParser.extract_class_ids(xml_file, class_names)
@@ -70,7 +74,7 @@ def create_json(xml_file, readme_file):
         "raw_class_names": unique_class_names,
         "class_ids": class_id_map,
         "readme": readme_content,
-        "tokenized_class_names": tokenized_class_names,
+        "tokenized_class_names": tokenized_class_names, # for now if no tokenization theyre the regular class names 
         "ranked_classes": [],
         "classifications": [],
         "prompt_used": None
@@ -136,7 +140,7 @@ def id_to_name_mapping(json_data):
 #    - Remove Implementation classes
 # -----------------------------------------------------------
 
-def main(xml_file, readme_file, model_args, labels_file, results_file, iteration=0):
+def main(xml_file, readme_file, model_args, labels_file, results_file, iteration=0, tokenization=True, similarity_ranking=True, readme=None):
     """
     Main workflow to process XMI and README files.
     """
@@ -145,7 +149,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
 
     # Step 1: Create initial JSON structure (with initial class names & ids)
     print("Creating initial JSON structure...")
-    init_data = create_json(xml_file, readme_file)
+    init_data = create_json(xml_file, readme_file, tokenization=tokenization, similarity_ranking=similarity_ranking)
 
     # Load your ExLlamaV2 model ONCE here (instead of in classify_classes)
     print("Loading ExLlama model + tokenizer + generator once...")
@@ -156,8 +160,16 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
 
     # Step 2: Use SBERT to rank class names
     print("Ranking class names using SBERT...")
-    data = sbertEmbeddings.calculate_similarity_and_rank(init_data)
-    print("Class names ranked successfully.")
+
+    if similarity_ranking:
+        data = sbertEmbeddings.calculate_similarity_and_rank(init_data)
+        print("Class names ranked successfully.")
+    else:
+        data = init_data
+        print("Skipping similarity ranking, using original class names order.")
+
+    #data = sbertEmbeddings.calculate_similarity_and_rank(init_data)
+    #print("Class names ranked successfully.")
 
     # metrics_object to compute precision over all class classifications, attributes and methods 
     metrics_object = {}
@@ -207,7 +219,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # Reclassify but this time without the uncertainty 
     #reclassified_data = inference.reclassify_classes(domain_specific_data, model_args, tokenizer, generator)
 
-    reclassified_data = inference.classify_classes(json_data = data)
+    reclassified_data = inference.classify_classes(json_data = data, similarity_ranking=similarity_ranking)
 
     all_class_names = xmiParser.extract_class_names(xml_file) # all the class names for ALL the classes
 
@@ -268,7 +280,14 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     print("Removing implementation detail classes from XML...")
     class_xml_path = cleanXML.remove_implementation_classes(xml_file, implementation_details_original_names)
     print("Implementation detail classes removed successfully.")
+	
 
+     # Remove irrelevant classes from neighbors
+    for impl_class in implementation_details_original_names:
+        if impl_class in all_class_neighbors:
+            del all_class_neighbors[impl_class]
+        if impl_class in all_class_names:
+            all_class_names.remove(impl_class)
     # Step 6.4 : Update the XML/JSON we're working with 
     #json_data = create_json(class_xml_path, readme_file) # comment bc of unnecessary loading
 
@@ -452,7 +471,7 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     all_class_attrs = xmiParser.extract_class_attributes(attr_xml_path)
 
     # Only ask the LLM about pairs with no existing association
-    class_pairs_map = get_class_pairs(all_class_names, all_class_neighbors)
+    # class_pairs_map = get_class_pairs(all_class_names, all_class_neighbors)
 
     inferred_pairs = set()
 
@@ -542,13 +561,15 @@ def main(xml_file, readme_file, model_args, labels_file, results_file, iteration
     # else:
     #     print(f"WARNING: Unknown labels file format: {labels_file}")
 
-def run_all_projects(model_args, max_projects=None, iterations=0):
+def run_all_projects(model_args, max_projects=0, iterations=0, tokenization=True, similarity_ranking=True, readme=None):
     base_dir = "../data_mcgill"
     projects = sorted(os.listdir(base_dir))
 
     # Optionally limit how many projects to run
-    if max_projects is not None:
-        projects = projects[len(projects)-1]
+    if max_projects != 0 and max_projects < len(projects):
+        projects = projects[:max_projects+1]
+    else:
+        projects = projects
 
     if iterations > 0:
         for i in range(iterations):
@@ -561,7 +582,7 @@ def run_all_projects(model_args, max_projects=None, iterations=0):
                     continue
 
                 print("\n===================================")
-                print(f"Running project: {project}")
+                print(f"Running project: {project}, iter {i+1}")
                 print("===================================\n")
 
                 xml_file = os.path.join(project_path, "project.xml")
@@ -593,7 +614,10 @@ def run_all_projects(model_args, max_projects=None, iterations=0):
                         model_args=model_args,
                         labels_file=labels_file,
                         results_file=results_file,
-                        iteration=0
+                        iteration=i,
+                        tokenization=tokenization,
+                        similarity_ranking=similarity_ranking,
+                        readme=readme
                     )
                 except Exception as e:
                     print(f"Error running {project}: {e}")
@@ -614,101 +638,31 @@ def fetch_sources() :
 
 if __name__ == "__main__":
 
-    ## MAIN FLOW 
-    # print("Fetching sources...")
-    # xml_file, readme_file, csv_file, labels_file= fetch_sources()
+
+    # Default values
+    max_projects = 2
+    tokenization = True
+
+    # Parse command-line arguments: python3 main.py <noOfProjects> <true/false>
+    if len(sys.argv) > 1:
+        try:
+            max_projects = int(sys.argv[1])
+        except Exception:
+            print("Invalid value for noOfProjects, using default:", max_projects)
+    if len(sys.argv) > 2:
+        tokenization_arg = sys.argv[2].lower()
+        if tokenization_arg in ["true", "1", "yes"]:
+            tokenization = True
+        elif tokenization_arg in ["false", "0", "no"]:
+            tokenization = False
+        else:
+            print("Invalid value for tokenization, using default:", tokenization)
 
     # Parse ExLlamaArguments using HF parser 
     parser = HfArgumentParser(ExLlamaArguments)
     model_args = parser.parse_args_into_dataclasses()[0]
 
-    # no_of_iterations = input("How many iterations do you want to run? ")
-
-    # for i in range(int(no_of_iterations)):
-    #     print(f"\nRunning iteration {i+1} of {no_of_iterations}...")
-    #     main(xml_file, readme_file, model_args, labels_file, csv_file, i)
-
-
-    run_all_projects(model_args, 2, 3)
-
-    # testing just the comparison 
-
-    # final_metrics_object = {'classes': {'FlexiBookApplication': {'Attributes': ['currentUser'], 'Methods': []}, 'TOCustomer': {'Attributes': ['name', 'noShow'], 'Methods': []}, 'TOTimeSlot': {'Attributes': ['startDate', 'startTime', 'endDate', 'endTime'], 'Methods': []}, 'TOComboItem': {'Attributes': ['isMandatory', 'serviceName', 'tOServiceCombo'], 'Methods': []}, 'TOService': {'Attributes': ['name', 'duration', 'downtimeDuration', 'downtimeStart'], 'Methods': []}, 'TOServiceCombo': {'Attributes': ['name', 'mainService', 'opServices', 'mandatoryServices'], 'Methods': []}, 'TOBusinessHour': {'Attributes': ['TODayOfWeek', 'startTime', 'endTime'], 'Methods': []}, 'TOAppointment': {'Attributes': ['customerName', 'serviceName', 'date', 'startTime', 'endTime'], 'Methods': []}, 'TOBusiness': {'Attributes': ['name', 'adress', 'phoneNumber', 'email'], 'Methods': []}, 'TOAppointmentCalender': {'Attributes': ['nameOfTheCustomer', 'serviceName', 'timeSlot'], 'Methods': []}, 'ServiceCombo': {'Attributes': ['mainService', 'services'], 'Methods': []}, 'BusinessHour': {'Attributes': ['dayOfWeek', 'startTime', 'endTime'], 'Methods': []}, 'DayOfWeek': {'Attributes': [], 'Methods': []}, 'TimeSlot': {'Attributes': ['startDate', 'startTime', 'endDate', 'endTime'], 'Methods': []}, 'Customer': {'Attributes': ['appointments', 'noShow'], 'Methods': []}, 'Appointment': {'Attributes': ['appointmentStatus', 'customer', 'bookableService', 'chosenItems', 'timeSlot'], 'Methods': []}, 'AppointmentStatus': {'Attributes': [], 'Methods': []}, 'User': {'Attributes': ['usersByUsername', 'username', 'password'], 'Methods': []}, 'Service': {'Attributes': ['duration', 'downtimeDuration', 'downtimeStart'], 'Methods': []}, 'Owner': {'Attributes': [], 'Methods': []}, 'Business': {'Attributes': ['name', 'address', 'phoneNumber', 'email', 'businessHours', 'holidays', 'vacation'], 'Methods': []}, 'ComboItem': {'Attributes': ['mandatory', 'service', 'serviceCombo'], 'Methods': []}, 'BookableService': {'Attributes': ['bookableservicesByName', 'name', 'appointments'], 'Methods': []}, 'FlexiBook': {'Attributes': ['business', 'owner', 'customers', 'hours', 'appointments', 'timeSlots', 'bookableServices'], 'Methods': []}, 'TOAppointmentCalendarItem': {'Attributes': ['date', 'availableTimeSlots', 'unavailableTimeSlots', 'tOAppointments'], 'Methods': []}}, 'associations': [['Appointment', 'AppointmentStatus'], ['Appointment', 'BookableService'], ['Appointment', 'BusinessHour'], ['Appointment', 'ComboItem'], ['Appointment', 'Customer'], ['Appointment', 'FlexiBook'], ['Appointment', 'FlexiBookApplication'], ['Appointment', 'Service'], ['Appointment', 'ServiceCombo'], ['Appointment', 'TOAppointment'], ['Appointment', 'TOAppointmentCalendarItem'], ['Appointment', 'TOAppointmentCalender'], ['Appointment', 'TOBusiness'], ['Appointment', 'TOBusinessHour'], ['Appointment', 'TOComboItem'], ['Appointment', 'TOCustomer'], ['Appointment', 'TOService'], ['Appointment', 'TOServiceCombo'], ['Appointment', 'TOTimeSlot'], ['Appointment', 'TimeSlot'], ['Appointment', 'User'], ['AppointmentStatus', 'BookableService'], ['AppointmentStatus', 'FlexiBook'], ['AppointmentStatus', 'TOAppointmentCalendarItem'], ['BookableService', 'Business'], ['BookableService', 'ComboItem'], ['BookableService', 'Customer'], ['BookableService', 'FlexiBook'], ['BookableService', 'FlexiBookApplication'], ['BookableService', 'Owner'], ['BookableService', 'Service'], ['BookableService', 'ServiceCombo'], ['BookableService', 'TOAppointment'], ['BookableService', 'TOAppointmentCalendarItem'], ['BookableService', 'TOAppointmentCalender'], ['BookableService', 'TOBusiness'], ['BookableService', 'TOComboItem'], ['BookableService', 'TOService'], ['BookableService', 'TOServiceCombo'], ['BookableService', 'TOTimeSlot'], ['BookableService', 'TimeSlot'], ['Business', 'BusinessHour'], ['Business', 'FlexiBook'], ['Business', 'FlexiBookApplication'], ['Business', 'Owner'], ['Business', 'Service'], ['Business', 'TOAppointmentCalendarItem'], ['Business', 'TOBusiness'], ['Business', 'TOBusinessHour'], ['BusinessHour', 'DayOfWeek'], ['BusinessHour', 'FlexiBook'], ['BusinessHour', 'Owner'], ['BusinessHour', 'TOAppointmentCalendarItem'], ['BusinessHour', 'TOBusiness'], ['BusinessHour', 'TOBusinessHour'], ['BusinessHour', 'TOTimeSlot'], ['BusinessHour', 'TimeSlot'], ['ComboItem', 'Service'], ['ComboItem', 'ServiceCombo'], ['ComboItem', 'TOComboItem'], ['ComboItem', 'TOService'], ['ComboItem', 'TOServiceCombo'], ['Customer', 'FlexiBook'], ['Customer', 'FlexiBookApplication'], ['Customer', 'Service'], ['Customer', 'TOAppointment'], ['Customer', 'TOAppointmentCalendarItem'], ['Customer', 'TOAppointmentCalender'], ['Customer', 'TOBusiness'], ['Customer', 'TOCustomer'], ['Customer', 'User'], ['DayOfWeek', 'TOAppointmentCalendarItem'], ['DayOfWeek', 'TOBusinessHour'], ['DayOfWeek', 'TimeSlot'], ['FlexiBook', 'FlexiBookApplication'], ['FlexiBook', 'Owner'], ['FlexiBook', 'Service'], ['FlexiBook', 'TOAppointment'], ['FlexiBook', 'TOAppointmentCalendarItem'], ['FlexiBook', 'TOAppointmentCalender'], ['FlexiBook', 'TOBusiness'], ['FlexiBook', 'TOBusinessHour'], ['FlexiBook', 'TOCustomer'], ['FlexiBook', 'TOTimeSlot'], ['FlexiBook', 'TimeSlot'], ['FlexiBook', 'User'], ['FlexiBookApplication', 'Owner'], ['FlexiBookApplication', 'ServiceCombo'], ['FlexiBookApplication', 'TOAppointment'], ['FlexiBookApplication', 'TOAppointmentCalendarItem'], ['FlexiBookApplication', 'TOAppointmentCalender'], ['FlexiBookApplication', 'TOBusiness'], ['FlexiBookApplication', 'TOCustomer'], ['FlexiBookApplication', 'User'], ['Owner', 'Service'], ['Owner', 'ServiceCombo'], ['Owner', 'TOBusiness'], ['Owner', 'TOBusinessHour'], ['Owner', 'TOServiceCombo'], ['Owner', 'User'], ['Service', 'ServiceCombo'], ['Service', 'TOAppointment'], ['Service', 'TOAppointmentCalendarItem'], ['Service', 'TOAppointmentCalender'], ['Service', 'TOBusiness'], ['Service', 'TOComboItem'], ['Service', 'TOService'], ['Service', 'TOServiceCombo'], ['Service', 'TOTimeSlot'], ['Service', 'TimeSlot'], ['ServiceCombo', 'TOAppointment'], ['ServiceCombo', 'TOAppointmentCalender'], ['ServiceCombo', 'TOBusiness'], ['ServiceCombo', 'TOComboItem'], ['ServiceCombo', 'TOService'], ['ServiceCombo', 'TOServiceCombo'], ['ServiceCombo', 'TOTimeSlot'], ['ServiceCombo', 'TimeSlot'], ['TOAppointment', 'TOAppointmentCalendarItem'], ['TOAppointment', 'TOAppointmentCalender'], ['TOAppointment', 'TOBusinessHour'], ['TOAppointment', 'TOComboItem'], ['TOAppointment', 'TOCustomer'], ['TOAppointment', 'TOService'], ['TOAppointment', 'TOServiceCombo'], ['TOAppointment', 'TOTimeSlot'], ['TOAppointment', 'TimeSlot'], ['TOAppointment', 'User'], ['TOAppointmentCalendarItem', 'TOAppointmentCalender'], ['TOAppointmentCalendarItem', 'TOBusiness'], ['TOAppointmentCalendarItem', 'TOBusinessHour'], ['TOAppointmentCalendarItem', 'TOCustomer'], ['TOAppointmentCalendarItem', 'TOService'], ['TOAppointmentCalendarItem', 'TOServiceCombo'], ['TOAppointmentCalendarItem', 'TOTimeSlot'], ['TOAppointmentCalendarItem', 'TimeSlot'], ['TOAppointmentCalender', 'TOBusiness'], ['TOAppointmentCalender', 'TOBusinessHour'], ['TOAppointmentCalender', 'TOComboItem'], ['TOAppointmentCalender', 'TOCustomer'], ['TOAppointmentCalender', 'TOService'], ['TOAppointmentCalender', 'TOServiceCombo'], ['TOAppointmentCalender', 'TOTimeSlot'], ['TOAppointmentCalender', 'TimeSlot'], ['TOBusiness', 'TOBusinessHour'], ['TOBusiness', 'TimeSlot'], ['TOBusinessHour', 'TOTimeSlot'], ['TOBusinessHour', 'TimeSlot'], ['TOComboItem', 'TOComboItem'], ['TOComboItem', 'TOService'], ['TOComboItem', 'TOServiceCombo'], ['TOCustomer', 'TOService'], ['TOService', 'TOServiceCombo'], ['TOService', 'TimeSlot'], ['TOServiceCombo', 'TimeSlot'], ['TOTimeSlot', 'TimeSlot']]}
-    # max_projects = 1
-
-    # base_dir = "../data_mcgill"
-    # projects = sorted(os.listdir(base_dir))
-
-    # # Optionally limit how many projects to run
-    # if max_projects is not None:
-    #     projects = projects[:max_projects+1]
-
-    # for project in projects:
-    #     project_path = os.path.join(base_dir, project)
-
-    #     if not os.path.isdir(project_path):
-    #         continue
-
-    #     print("\n===================================")
-    #     print(f"Running project: {project}")
-    #     print("===================================\n")
-
-    #     xml_file = os.path.join(project_path, "project.xml")
-    #     readme_file = os.path.join(project_path, "readme.md")
-
-    #     # optional files
-    #     labels_file = next((os.path.join(project_path, f) for f in os.listdir(project_path) if f.endswith(".ump")), None)
-    #     results_file = os.path.join(project_path, "results.csv")
-    #     # CSV file will be created by metrics.py with headers when first written to
-
-    #     if not os.path.exists(xml_file):
-    #         print(f"Skipping {project} (no project.xml)")
-    #         continue
-
-    #     try:
-    #         metrics.compare_ump(
-    #             gt=umpParser.main(labels_file), # ground truth in json format 
-    #             output=final_metrics_object,
-    #             results_file=results_file, 
-    #             iter_no=0
-    #         )
-    #     except Exception as e:
-    #         print(f"Error running {project}: {e}")
-    #         traceback.print_exc()
-
-
-
-
-
-    ## TO TEST RELEVANT ATTRIBUTES 
-    # output_xml_path = "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/Espresso/project_modified.xml"
-    # with open("/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/project_output.json", 'r') as file:
-    #     json_data = json.load(file)
-
-    # print("Extracting class attributes")
-    # all_class_attrs = xmiParser.extract_class_attributes(output_xml_path)
-
-    # all_class_neighbors = {}
-    # for c in all_class_attrs.keys():
-    #     neighbors = xmiParser.extract_class_neighbors(output_xml_path, c)
-    #     all_class_neighbors[c] = neighbors
-
-    # # For each of those classes, make the LLM judge which of its attributes is relevant or not 
-    # for c in all_class_attrs.keys(): 
-    #     inference.classify_attributes(c, json_data['tokenized_class_names'], all_class_attrs[c], json_data['readme'], all_class_neighbors[c], model_args, tokenizer, generator)
-
-    ## TO TEST EVALUATION METRICS 
-    # with open("/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/project_output.json", "r") as output1_file:
-    #         output1 = json.load(output1_file)
-
-    # with open("/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/project_output2.json", "r") as output2_file:
-    #         output2 = json.load(output2_file)
-
-    # avg_precision, avg_recall = metrics.compare(output1["classifications"], output2["classifications"], 
-    #         "/u/mancasat/Desktop/summer_intern/domain-concepts-identification-using-LLMs-aless/data/HealthPlus_data/metrics.csv",
-    #         output1["tokenized_class_names"])
-    
-    # print(f"Average Precision: {avg_precision}, Average Recall: {avg_recall}")
+    run_all_projects(model_args, max_projects, 0, tokenization, similarity_ranking, readme)
 
 
 # -----------------------------------------------------------

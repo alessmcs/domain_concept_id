@@ -11,7 +11,7 @@ def get_sbert_model():
     global model
     if model is None:
         print("Loading SBERT model...")
-        model = SentenceTransformer('msmarco-distilbert-cos-v5')
+        model = SentenceTransformer('/home/alessmcs/projects/def-sahraouh/alessmcs/domain_concept_research/models/msmarco-distilbert-cos-v5')
         print("SBERT model loaded successfully!")
     return model
 
