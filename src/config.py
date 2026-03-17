@@ -6,7 +6,8 @@ import sys
 @dataclass
 class ExLlamaArguments:
     model_dir: Optional[str] = field(
-        default="/home/alessmcs/projects/def-sahraouh/alessmcs/models/llama3-70b-exl2", # path on narval
+        # default="/home/alessmcs/projects/def-sahraouh/alessmcs/models/llama3-70b-exl2", # path on narval
+        default="/Tmp/mancasat/models/Meta-Llama-3.1-70B-Instruct-GPTQ-INT4" , # path on ostende/madagh
         metadata={"help": "Path to the local model directory."}
     )
 
@@ -55,9 +56,30 @@ class ExLlamaArguments:
         metadata={"help": "Maximum number of new tokens to generate."}
     )
 
+    max_projects: int = field(
+        default=2,
+        metadata={"help": "Number of projects to run"}
+    )
+
+    tokenization: bool = field(
+        default=True,
+        metadata={"help": "Enable tokenization"}
+    )
+
+    similarity_ranking: bool = field(
+        default=True,
+        metadata={"help": "Enable similarity ranking"}
+    )
+
+    readme: Optional[bool] = field(
+        default=True,
+        metadata={"help": "Use README information"}
+    )
+
 
 if __name__ == "__main__":
     from transformers import HfArgumentParser
     parser = HfArgumentParser(ExLlamaArguments)
     model_args = parser.parse_args_into_dataclasses()[0]
     print(model_args.max_seq_len)
+

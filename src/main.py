@@ -565,11 +565,15 @@ def run_all_projects(model_args, max_projects=0, iterations=0, tokenization=True
     base_dir = "../data_mcgill"
     projects = sorted(os.listdir(base_dir))
 
+    print(f"running projects in {base_dir}: {projects}")
+
     # Optionally limit how many projects to run
     if max_projects != 0 and max_projects < len(projects):
         projects = projects[:max_projects+1]
+        print(f"Limiting to first {max_projects} projects: {projects}")
     else:
         projects = projects
+        print(f"Running all {len(projects)} projects: {projects}")
 
     if iterations > 0:
         for i in range(iterations):
@@ -637,32 +641,19 @@ def fetch_sources() :
     return data[int(source)]["class-diagram"], data[int(source)]["readme"], data[int(source)]["csv"], data[int(source)]["labels"]
 
 if __name__ == "__main__":
+    from transformers import HfArgumentParser
 
-
-    # Default values
-    max_projects = 2
-    tokenization = True
-
-    # Parse command-line arguments: python3 main.py <noOfProjects> <true/false>
-    if len(sys.argv) > 1:
-        try:
-            max_projects = int(sys.argv[1])
-        except Exception:
-            print("Invalid value for noOfProjects, using default:", max_projects)
-    if len(sys.argv) > 2:
-        tokenization_arg = sys.argv[2].lower()
-        if tokenization_arg in ["true", "1", "yes"]:
-            tokenization = True
-        elif tokenization_arg in ["false", "0", "no"]:
-            tokenization = False
-        else:
-            print("Invalid value for tokenization, using default:", tokenization)
-
-    # Parse ExLlamaArguments using HF parser 
     parser = HfArgumentParser(ExLlamaArguments)
     model_args = parser.parse_args_into_dataclasses()[0]
 
-    run_all_projects(model_args, max_projects, 0, tokenization, similarity_ranking, readme)
+    run_all_projects(
+        model_args,
+        model_args.max_projects,
+        1, # iterations
+        model_args.tokenization,
+        model_args.similarity_ranking,
+        model_args.readme
+    )
 
 
 # -----------------------------------------------------------
